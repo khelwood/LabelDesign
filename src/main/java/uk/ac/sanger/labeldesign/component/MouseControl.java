@@ -11,8 +11,17 @@ import java.awt.event.MouseEvent;
 public class MouseControl extends MouseAdapter {
     private DesignPanel designPanel;
 
+    public MouseControl(DesignPanel designPanel) {
+        this.designPanel = designPanel;
+    }
+
+
     private Design getDesign() {
         return designPanel.getDesign();
+    }
+
+    private Object fieldAt(int x, int y) {
+        return null; // TODO
     }
 
     @Override

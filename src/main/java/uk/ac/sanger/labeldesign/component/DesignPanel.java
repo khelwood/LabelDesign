@@ -1,13 +1,13 @@
 package uk.ac.sanger.labeldesign.component;
 
-import uk.ac.sanger.labeldesign.model.Design;
-import uk.ac.sanger.labeldesign.view.Draw;
-import uk.ac.sanger.labeldesign.view.RenderFactory;
+import uk.ac.sanger.labeldesign.model.*;
+import uk.ac.sanger.labeldesign.view.*;
 
 import javax.swing.JPanel;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.*;
 
 /**
  * A panel that displays a {@link Design}.
@@ -16,6 +16,7 @@ import java.awt.event.MouseEvent;
 public class DesignPanel extends JPanel {
     private RenderFactory renderFactory;
     private Design design;
+    private Map<Object, Rectangle> objectBounds;
     private int x0, y0;
 
     public DesignPanel(RenderFactory renderFactory) {
@@ -42,6 +43,7 @@ public class DesignPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         x0 = y0 = 0;
+        objectBounds = new HashMap<>();
         if (design!=null) {
             int wi = design.getWidth();
             int hi = design.getHeight();
@@ -52,6 +54,21 @@ public class DesignPanel extends JPanel {
             g.translate(x0, y0);
             try (Draw draw = new Draw(g)) {
                 renderFactory.getDesignRender().render(draw, design);
+            }
+            for (StringField sf : design.getStringFields()) {
+                try (Draw draw = new Draw(g)) {
+                    Rectangle bounds = renderFactory.getStringRender().render(draw, sf);
+                    objectBounds.put(sf, bounds);
+                }
+            }
+            for (BarcodeField bf : design.getBarcodeFields()) {
+                try (Draw draw = new Draw(g)) {
+                    Rectangle bounds = renderFactory.getBarcodeRender().render(draw, bf);
+                    objectBounds.put(bf, bounds);
+                }
+            }
+            try (Draw draw = new Draw(g)) {
+                objectBounds.values().forEach(r -> draw.rect(r, null, Color.cyan));
             }
         }
     }

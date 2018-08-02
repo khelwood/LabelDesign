@@ -12,7 +12,7 @@ import java.util.stream.Stream;
  * @author dr6
  */
 public class RenderFactoryImp implements RenderFactory {
-    private DesignRender designRender = new DesignRender(this);
+    private DesignRender designRender = new DesignRender();
     private BarcodeRender barcodeRender = new BarcodeRender();
     private StringRender stringRender = new StringRender(this);
 
