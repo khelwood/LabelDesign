@@ -3,7 +3,7 @@ package uk.ac.sanger.labeldesign.model;
 /**
  * @author dr6
  */
-abstract class DesignField {
+public abstract class DesignField {
     private String name;
     private int x,y;
     private int rotation;
@@ -27,6 +27,11 @@ abstract class DesignField {
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    public void translate(int dx, int dy) {
+        this.x += dx;
+        this.y += dy;
     }
 
     public int getRotation() {

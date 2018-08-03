@@ -32,6 +32,10 @@ public class Draw implements AutoCloseable {
         return rect;
     }
 
+    public void setStroke(Stroke stroke) {
+        ((Graphics2D) graphics).setStroke(stroke);
+    }
+
     public Rectangle string(int x, int y, String string, Color colour, Font font, int spacing) {
         if (string.isEmpty()) {
             return new Rectangle(x,y,0,0);
