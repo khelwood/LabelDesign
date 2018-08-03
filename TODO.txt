@@ -1,0 +1,12 @@
+* Mouse selection
+* Show selection
+* Dragging
+* Show edit pane in a side pane
+* Use side-pane edit pane when adding new field
+* Field name uniqueness
+* Side pane should list all components when none is selected
+* Loading/saving design
+* Export JSON to file
+* Scaling fonts
+* Adding barcodes
+* Warning that fonts are approximations
