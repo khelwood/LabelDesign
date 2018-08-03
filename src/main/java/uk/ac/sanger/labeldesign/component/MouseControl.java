@@ -42,7 +42,9 @@ public class MouseControl extends MouseAdapter {
         }
         editRect = editSelection(event);
         DesignField field = fieldAt(event);
-        if (field!=null) {
+        if (field==null && !editRect) {
+            designPanel.deselect();
+        } else {
             if (editRect) {
                 designPanel.toggleSelection(field);
             } else {

@@ -31,6 +31,22 @@ public class DesignApp implements Runnable {
         frame.setJMenuBar(createMenuBar());
 
         frame.setVisible(true);
+        Design design = new Design();
+        design.setName("New design");
+        design.setBounds(0, 600, 0, 300);
+        StringField sf = new StringField();
+        sf.setName("field1");
+        sf.setPosition(100, 100);
+        sf.setDisplayText("String field 1");
+        sf.setFontCode('H');
+        design.getStringFields().add(sf);
+        sf = new StringField();
+        sf.setName("field2");
+        sf.setPosition(200, 200);
+        sf.setDisplayText("String field 2");
+        sf.setFontCode('C');
+        design.getStringFields().add(sf);
+        frame.setDesign(design);
     }
 
     private void createFrame() {
