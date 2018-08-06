@@ -126,8 +126,8 @@ public class DesignPanel extends JPanel {
         repaint();
     }
 
-    public void toggleSelection(DesignField df) {
-        selection.toggle(df);
+    public boolean toggleSelection(DesignField df) {
+        return selection.toggle(df);
     }
 
     public boolean isSelected(DesignField df) {

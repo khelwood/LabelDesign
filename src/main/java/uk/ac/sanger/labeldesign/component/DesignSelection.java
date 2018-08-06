@@ -76,21 +76,25 @@ public class DesignSelection implements Iterable<DesignField> {
         rect = null;
     }
 
-    public void add(DesignField df) {
+    public boolean add(DesignField df) {
+        Objects.requireNonNull(df, "Cannot add null to selection");
         if (!(selected instanceof HashSet)) {
             selected = new HashSet<>(selected);
         }
-        selected.add(df);
+        return selected.add(df);
     }
 
     public boolean contains(DesignField df) {
         return (selected.contains(df) || selectedInRect.contains(df));
     }
 
-    public void toggle(DesignField df) {
-        if (!selected.add(df)) {
-            selected.remove(df);
+    public boolean toggle(DesignField df) {
+        Objects.requireNonNull(df, "Cannot toggle null");
+        if (add(df)) {
+            return true;
         }
+        selected.remove(df);
+        return false;
     }
 
     public boolean isEmpty() {

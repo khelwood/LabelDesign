@@ -86,7 +86,6 @@ public class Draw implements AutoCloseable {
                 newRect.y = y0 - (rect.x - x0 + rect.width);
             }
         }
-        System.out.printf("rotate(%s, %s)==%s%n", rect, rotation, newRect);
         return newRect;
     }
 //

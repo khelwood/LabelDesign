@@ -16,12 +16,12 @@ public class MouseControl extends MouseAdapter {
     private DesignPanel designPanel;
     private int lastX, lastY;
     private boolean inSpace;
-    private boolean editRect;
+    private boolean editMode;
+    private boolean allowDragging;
 
     public MouseControl(DesignPanel designPanel) {
         this.designPanel = designPanel;
     }
-
 
     private Design getDesign() {
         return designPanel.getDesign();
@@ -40,23 +40,24 @@ public class MouseControl extends MouseAdapter {
         if (!isEnabled()) {
             return;
         }
-        editRect = editSelection(event);
+        editMode = editSelection(event);
         DesignField field = fieldAt(event);
-        if (field==null && !editRect) {
-            designPanel.deselect();
+        allowDragging = false;
+        if (editMode) {
+            allowDragging = (field!=null && designPanel.toggleSelection(field));
+        } else if (field!=null && designPanel.isSelected(field)) {
+            allowDragging = true;
         } else {
-            if (editRect) {
-                designPanel.toggleSelection(field);
-            } else {
-                if (!designPanel.isSelected(field)) {
-                    designPanel.deselect();
-                }
+            designPanel.deselect();
+            if (field!=null) {
                 designPanel.select(field);
+                allowDragging = true;
             }
         }
         lastX = event.getX();
         lastY = event.getY();
         inSpace = (field==null);
+        designPanel.repaint();
     }
 
     @Override
@@ -64,7 +65,7 @@ public class MouseControl extends MouseAdapter {
         if (!isEnabled()) {
             return;
         }
-        if (!editRect) {
+        if (!editMode) {
             designPanel.deselect();
             DesignField field = fieldAt(event);
             if (field!=null) {
@@ -82,7 +83,7 @@ public class MouseControl extends MouseAdapter {
         int y = event.getY();
         if (inSpace) {
             designPanel.setSelectionRect(lastX, lastY, x, y);
-        } else {
+        } else if (allowDragging) {
             designPanel.drag(x-lastX, y-lastY);
             lastX = x;
             lastY = y;
@@ -93,6 +94,7 @@ public class MouseControl extends MouseAdapter {
     public void mouseReleased(MouseEvent e) {
         super.mouseReleased(e);
         designPanel.clearSelectionRect();
+        allowDragging = false;
     }
 
     public boolean isEnabled() {

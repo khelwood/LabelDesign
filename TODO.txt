@@ -1,6 +1,3 @@
-* Mouse selection
-* Show selection
-* Dragging
 * Show edit pane in a side pane
 * Use side-pane edit pane when adding new field
 * Field name uniqueness
