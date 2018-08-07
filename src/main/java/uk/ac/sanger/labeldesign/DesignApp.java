@@ -11,11 +11,9 @@ import uk.ac.sanger.labeldesign.view.RenderFactory;
 import uk.ac.sanger.labeldesign.view.implementation.RenderFactoryImp;
 
 import javax.json.JsonValue;
-import javax.json.JsonWriter;
 import javax.swing.*;
 import java.awt.FileDialog;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.nio.file.*;
 import java.util.EnumMap;
 import java.util.Map;
@@ -199,9 +197,9 @@ public class DesignApp implements Runnable {
         }
     }
 
-    private boolean write(JsonValue json, Path path, JsonOutput jcon) {
-        try (JsonWriter out = jcon.getWriter(Files.newBufferedWriter(path))) {
-            out.write(json);
+    private boolean write(JsonValue jsonValue, Path path, JsonOutput jcon) {
+        try {
+            jcon.write(jsonValue, path);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -235,10 +233,8 @@ public class DesignApp implements Runnable {
     }
 
     private static boolean endsWithIgnoreCase(String string, String end) {
-        if (string==null || end==null || string.length() < end.length()) {
-            return false;
-        }
-        return string.regionMatches(true, string.length()-end.length(), end, 0, end.length());
+        return (string!=null && end!=null && string.length() >= end.length() &&
+           string.regionMatches(true, string.length()-end.length(), end, 0, end.length()));
     }
 
     private static FilenameFilter getFilter(final String extension) {

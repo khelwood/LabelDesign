@@ -3,6 +3,8 @@ package uk.ac.sanger.labeldesign.conversion;
 import javax.json.*;
 import javax.json.stream.JsonGenerator;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 
 /**
@@ -40,20 +42,9 @@ public abstract class JsonOutput {
         return new String(new char[] {ch, ch});
     }
 
-    public JsonWriter getWriter(OutputStream out) {
-        return jwf.createWriter(out);
-    }
-    public JsonWriter getWriter(Writer out) {
-        return jwf.createWriter(out);
-    }
-
-    public String toString(JsonValue value) {
-        try (StringWriter sw = new StringWriter()) {
-            getWriter(sw).write(value);
-            return sw.toString();
-        } catch (Exception e) {
-            throw new JsonException("Error from writing JSON to string.", e);
+    public void write(JsonValue value, Path path) throws IOException {
+        try (JsonWriter out = jwf.createWriter(Files.newBufferedWriter(path))) {
+            out.write(value);
         }
     }
-
 }
