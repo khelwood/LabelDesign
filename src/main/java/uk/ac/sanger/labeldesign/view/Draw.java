@@ -20,6 +20,10 @@ public class Draw implements AutoCloseable {
         this.graphics.dispose();
     }
 
+    public Rectangle rect(int x, int y, int w, int h, Color inner, Color outer) {
+        return rect(new Rectangle(x, y, w, h), inner, outer);
+    }
+
     public Rectangle rect(Rectangle rect, Color inner, Color outer) {
         if (inner!=null) {
             graphics.setColor(inner);

@@ -9,14 +9,16 @@ import java.util.Map;
  */
 public class FontFactory {
     private Map<String, Font> namedFontCache = new HashMap<>();
+    private static final float FONT_SCALE = 1.75f;
 
-    public Font getFont(String family, int style, int size) {
+    public Font getFont(String family, int style, float size) {
+        int scaledSize = (int) (FONT_SCALE*size);
         Font font = namedFontCache.get(family);
         if (font == null) {
-            font = bestFont(family, style, size);
+            font = bestFont(family, style, scaledSize);
             namedFontCache.put(family, font);
         }
-        return font.deriveFont(style, size);
+        return new Font(font.getFontName(), style, scaledSize);
     }
 
     private Font bestFont(String family, int style, int size) {

@@ -3,7 +3,5 @@
 * Field name uniqueness
 * Side pane should list all components when none is selected
 * Loading/saving design
-* Export JSON to file
-* Scaling fonts
 * Adding barcodes
 * Warning that fonts are approximations

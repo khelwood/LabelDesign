@@ -49,8 +49,8 @@ public class RenderFactoryImp implements RenderFactory {
             case 'K': return fontFactory.getFont("Helvetica", Font.BOLD, 21);
             case 'L': return fontFactory.getFont("Helvetica", Font.ITALIC, 18);
             case 'M': return fontFactory.getFont("Presentation", Font.BOLD, 27);
-            case 'N': return fontFactory.getFont("Letter gothic", Font.PLAIN, 14);
-            case 'O': return fontFactory.getFont("Prestige Elite", Font.PLAIN, 10);
+            case 'N': return fontFactory.getFont("Letter gothic", Font.PLAIN, 14.3f);
+            case 'O': return fontFactory.getFont("Prestige Elite", Font.PLAIN, 10.5f);
             case 'P': return fontFactory.getFont("Prestige Elite", Font.BOLD, 15);
             case 'Q': return fontFactory.getFont("Courier", Font.PLAIN, 15);
             case 'R': return fontFactory.getFont("Courier", Font.BOLD, 18);

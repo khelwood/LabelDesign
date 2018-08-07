@@ -1,32 +1,15 @@
-package uk.ac.sanger.labeldesign;
+package uk.ac.sanger.labeldesign.conversion;
 
 import uk.ac.sanger.labeldesign.model.*;
 
 import javax.json.*;
-import javax.json.stream.JsonGenerator;
-import java.io.*;
-import java.util.Collections;
 
 /**
- * Tool to convert a {@link Design} to JSON.
  * @author dr6
  */
-public class JsonConversion {
-    private JsonBuilderFactory jbf;
-    private JsonWriterFactory jwf;
-
-    public JsonConversion(JsonBuilderFactory jbf, JsonWriterFactory jwf) {
-        this.jbf = jbf;
-        this.jwf = jwf;
-    }
-
-    public JsonConversion() {
-        this(Json.createBuilderFactory(null),
-                Json.createWriterFactory(Collections.singletonMap(JsonGenerator.PRETTY_PRINTING, true)));
-    }
-
+public class JsonExport extends JsonConversion {
     public JsonValue toJson(StringField sf) {
-        return jbf.createObjectBuilder()
+        return getBuilderFactory().createObjectBuilder()
                 .add("horizontal_magnification", to2s(sf.getMagnification()))
                 .add("vertical_magnification", to2s(sf.getMagnification()))
                 .add("font", String.valueOf(sf.getFontCode()))
@@ -39,7 +22,7 @@ public class JsonConversion {
     }
 
     public JsonValue toJson(BarcodeField bf) {
-        return jbf.createObjectBuilder()
+        return getBuilderFactory().createObjectBuilder()
                 .add("barcode_type", String.valueOf(bf.getBarcodeType()))
                 .add("height", to4s(bf.getHeight()))
                 .add("one_cell_width", to2s(bf.getCellWidth()))
@@ -52,6 +35,7 @@ public class JsonConversion {
     }
 
     public JsonValue toJson(Design design) {
+        JsonBuilderFactory jbf = getBuilderFactory();
         JsonArrayBuilder sfBuilder = jbf.createArrayBuilder();
         for (StringField sf : design.getStringFields()) {
             sfBuilder.add(toJson(sf));
@@ -82,34 +66,4 @@ public class JsonConversion {
                 )
                 .build();
     }
-
-    private static String to2s(int n) {
-        return String.format("%02d", n);
-    }
-
-    private static String to4s(int n) {
-        return String.format("%04d", n);
-    }
-
-    private static String rep2(int n) {
-        char ch = (char) ('0'+n);
-        return new String(new char[] {ch, ch});
-    }
-
-    public JsonWriter getWriter(OutputStream out) {
-        return jwf.createWriter(out);
-    }
-    public JsonWriter getWriter(Writer out) {
-        return jwf.createWriter(out);
-    }
-
-    public String toString(JsonValue value) {
-        try (StringWriter sw = new StringWriter()) {
-            getWriter(sw).write(value);
-            return sw.toString();
-        } catch (IOException e) {
-            throw new JsonException("Error from writing JSON to string.", e);
-        }
-    }
-
 }
