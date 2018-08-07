@@ -2,6 +2,6 @@
 * Use side-pane edit pane when adding new field
 * Field name uniqueness
 * Side pane should list all components when none is selected
-* Loading/saving design
 * Adding barcodes
 * Warning that fonts are approximations
+* Importing from pmb json template

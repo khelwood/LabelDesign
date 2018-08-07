@@ -57,10 +57,10 @@ public class Design {
         this.yMax = yMax;
     }
 
-    public void setBounds(int xMin, int xMax, int yMin, int yMax) {
+    public void setBounds(int xMin, int yMin, int xMax, int yMax) {
         this.xMin = xMin;
-        this.xMax = xMax;
         this.yMin = yMin;
+        this.xMax = xMax;
         this.yMax = yMax;
     }
 

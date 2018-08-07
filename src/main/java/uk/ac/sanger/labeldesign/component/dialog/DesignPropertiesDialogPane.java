@@ -75,7 +75,7 @@ public class DesignPropertiesDialogPane extends ComponentDialogPane {
         int y0 = (int) boundaryFields[2].getValue();
         int y1 = (int) boundaryFields[3].getValue();
         int labelType = (int) (Integer) labelTypeField.getValue();
-        design.setBounds(x0, x1, y0, y1);
+        design.setBounds(x0, y0, x1, y1);
         design.setLabelTypeId(labelType);
     }
 }

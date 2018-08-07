@@ -7,7 +7,7 @@ import javax.json.*;
 /**
  * @author dr6
  */
-public class JsonExport extends JsonConversion {
+public class JsonExport extends JsonOutput {
     public JsonValue toJson(StringField sf) {
         return getBuilderFactory().createObjectBuilder()
                 .add("horizontal_magnification", to2s(sf.getMagnification()))

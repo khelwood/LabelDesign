@@ -7,12 +7,11 @@ import javax.json.*;
 /**
  * @author dr6
  */
-public class DesignWriter extends JsonConversion {
+public class DesignWriter extends JsonOutput {
     public JsonValue toJson(StringField sf) {
         return getBuilderFactory().createObjectBuilder()
                 .add("name", sf.getName())
                 .add("text", sf.getDisplayText())
-                .add("magnification", sf.getMagnification())
                 .add("font", String.valueOf(sf.getFontCode()))
                 .add("spacing", sf.getSpacing())
                 .add("rotation", sf.getRotation())

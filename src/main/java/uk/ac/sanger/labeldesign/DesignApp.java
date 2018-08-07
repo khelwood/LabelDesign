@@ -5,7 +5,8 @@ import uk.ac.sanger.labeldesign.component.DesignFrame;
 import uk.ac.sanger.labeldesign.component.dialog.DesignPropertiesDialogPane;
 import uk.ac.sanger.labeldesign.component.dialog.StringFieldPropertiesDialogPane;
 import uk.ac.sanger.labeldesign.conversion.*;
-import uk.ac.sanger.labeldesign.model.*;
+import uk.ac.sanger.labeldesign.model.Design;
+import uk.ac.sanger.labeldesign.model.StringField;
 import uk.ac.sanger.labeldesign.view.RenderFactory;
 import uk.ac.sanger.labeldesign.view.implementation.RenderFactoryImp;
 
@@ -13,7 +14,8 @@ import javax.json.JsonValue;
 import javax.json.JsonWriter;
 import javax.swing.*;
 import java.awt.FileDialog;
-import java.io.*;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.nio.file.*;
 import java.util.EnumMap;
 import java.util.Map;
@@ -39,39 +41,13 @@ public class DesignApp implements Runnable {
         frame.setJMenuBar(createMenuBar());
 
         frame.setVisible(true);
-        Design design = new Design();
-        design.setName("New design");
-        design.setBounds(-100, 400, -10, 210);
-        Object[] stringFieldData = {
-                "barcode_text", "PBMC CGAP-FFFFFF", 0, 35,
-                "contents", "$KM12_c908R2x100", 0, 70,
-                "passage", "PSG 99", 100, 105,
-                "exp_num", "0321", 250, 105,
-                "fate", "FLU 24HR", 100, 140,
-                "enumeration", "25/50", 220, 140,
-                "date", "2018-08-06", 100, 175,
-                "environment", "TEST", 250, 175,
-                "adherence", "susp", 250, 70,
-        };
-        int xOffs = 10;
-        for (int i = 0; i < stringFieldData.length; i+=4) {
-            StringField sf = new StringField();
-            sf.setName((String) stringFieldData[i]);
-            sf.setDisplayText((String) stringFieldData[i+1]);
-            sf.setPosition((int) stringFieldData[i+2]+xOffs, (int) stringFieldData[i+3]);
-            sf.setFontCode('H');
-            sf.setSpacing(1);
-            design.getStringFields().add(sf);
+
+        try {
+            Design design = new DesignReader().readDesign(Paths.get("/Users/dr6/Desktop/untitled.lbld"));
+            frame.setDesign(design);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        BarcodeField bf = new BarcodeField();
-        bf.setBarcodeType('Q');
-        bf.setCellWidth(4);
-        bf.setHeight(70);
-        bf.setPosition(80+xOffs, 90);
-        bf.setName("barcode");
-        design.getBarcodeFields().add(bf);
-        design.setName("New label");
-        frame.setDesign(design);
     }
 
     private void createFrame() {
@@ -98,6 +74,7 @@ public class DesignApp implements Runnable {
 
     private enum OperationEnum implements DesignAction.Operation {
         NEW_DESIGN(MenuGroup.File, "New design", DesignApp::newDesign),
+        LOAD_DESIGN(MenuGroup.File, "Open design", DesignApp::loadDesign),
         SAVE_DESIGN(MenuGroup.File, "Save design", DesignApp::saveDesign),
         SAVE_AS(MenuGroup.File, "Save design as", DesignApp::saveDesignAs),
         EXPORT_JSON(MenuGroup.File, "Export JSON", DesignApp::exportJson),
@@ -197,11 +174,36 @@ public class DesignApp implements Runnable {
         saveDesign(path);
     }
 
-    private boolean write(JsonValue json, Path path, JsonConversion jcon) {
+    private void loadDesign() {
+        Path path = requestFilePath(null, FileDialog.LOAD, DESIGN_EXTENSION);
+        if (path==null) {
+            return;
+        }
+        JsonInput jin = new DesignReader();
+        Design design = load(path, jin);
+        if (design!=null) {
+            setDesign(design);
+            this.filePath = path;
+        }
+    }
+
+    private Design load(Path path, JsonInput reader) {
+        try {
+            JsonValue value = reader.readPath(path);
+            return reader.toDesign(value);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(frame, "An error occurred trying to read the file.",
+                    "File error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+    }
+
+    private boolean write(JsonValue json, Path path, JsonOutput jcon) {
         try (JsonWriter out = jcon.getWriter(Files.newBufferedWriter(path))) {
             out.write(json);
             return true;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(frame, "An error occurred trying to write the file.",
                     "File error", JOptionPane.ERROR_MESSAGE);

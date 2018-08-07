@@ -35,6 +35,9 @@ public class DesignFrame extends JFrame {
 
     public void setDesign(Design design) {
         this.designPanel.setDesign(design);
+        if (design!=null && design.getName()!=null) {
+            setTitle(design.getName());
+        }
     }
 
     public void repaintDesign() {
