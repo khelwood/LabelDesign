@@ -15,6 +15,7 @@ public class DesignSelection implements Iterable<DesignField> {
 
     private Rectangle rect;
     private Stroke dashStroke;
+    private final Color selectionFill = new Color(0x404040d0, true);
 
     public Set<DesignField> getSelected() {
         if (rect==null || selectedInRect.isEmpty()) {
@@ -55,17 +56,16 @@ public class DesignSelection implements Iterable<DesignField> {
         if (sel.isEmpty() && rect==null) {
             return;
         }
-        Color colour = Color.blue;
         try (Draw draw = new Draw(g)) {
             for (DesignField df : sel) {
                 Rectangle bounds = fieldBounds.get(df);
                 if (bounds!=null) {
-                    draw.rect(bounds, null, colour);
+                    draw.rect(bounds, selectionFill, null);
                 }
             }
             if (rect!=null) {
                 draw.setStroke(getDashStroke());
-                draw.rect(rect, null, colour);
+                draw.rect(rect, selectionFill, Color.blue);
             }
         }
     }
