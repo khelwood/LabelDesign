@@ -10,7 +10,7 @@ import java.awt.BorderLayout;
 /**
  * @author dr6
  */
-public class StringFieldPropertiesDialogPane extends ComponentDialogPane {
+public class StringFieldPropertiesPane extends PropertiesPane {
     private JTextField nameField, stringField;
 
     private JSpinner xField, yField;
@@ -18,7 +18,7 @@ public class StringFieldPropertiesDialogPane extends ComponentDialogPane {
     private JComboBox<String> fontCodeField;
     private JComboBox<String> rotationField;
 
-    public StringFieldPropertiesDialogPane(Design design, RenderFactory renderFactory) {
+    public StringFieldPropertiesPane(Design design, RenderFactory renderFactory) {
         int wi = design.getWidth();
         int hi = design.getHeight();
         nameField = makeTextField();

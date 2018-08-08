@@ -3,9 +3,8 @@ package uk.ac.sanger.labeldesign.component;
 import uk.ac.sanger.labeldesign.model.Design;
 import uk.ac.sanger.labeldesign.view.RenderFactory;
 
-import javax.swing.JFrame;
-import java.awt.BorderLayout;
-import java.awt.Container;
+import javax.swing.*;
+import java.awt.Component;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
@@ -14,13 +13,21 @@ import java.awt.event.ComponentEvent;
  */
 public class DesignFrame extends JFrame {
     private DesignPanel designPanel;
+    private JSplitPane splitPane;
+    private JScrollPane designScrollPane;
+    private JScrollPane propertiesScrollPane;
 
     public DesignFrame(RenderFactory renderFactory) {
         designPanel = new DesignPanel(renderFactory);
-        Container cp = getContentPane();
-        cp.setLayout(new BorderLayout());
-        cp.add(designPanel, BorderLayout.CENTER);
 
+        designScrollPane = new JScrollPane(designPanel);
+
+        propertiesScrollPane = new JScrollPane(new JPanel());
+
+        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, designScrollPane, propertiesScrollPane);
+        splitPane.setDividerLocation(600);
+
+        setContentPane(splitPane);
         designPanel.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -31,6 +38,14 @@ public class DesignFrame extends JFrame {
 
     public Design getDesign() {
         return this.designPanel.getDesign();
+    }
+
+    public void setPropertiesView(Component component) {
+        propertiesScrollPane.setViewportView(component);
+    }
+
+    public void clearPropertiesView() {
+        propertiesScrollPane.setViewportView(new JPanel());
     }
 
     public void setDesign(Design design) {

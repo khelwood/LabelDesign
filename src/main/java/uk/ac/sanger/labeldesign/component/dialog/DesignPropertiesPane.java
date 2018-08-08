@@ -9,12 +9,13 @@ import java.util.Arrays;
 /**
  * @author dr6
  */
-public class DesignPropertiesDialogPane extends ComponentDialogPane {
+public class DesignPropertiesPane extends PropertiesPane {
     private JTextField nameField;
     private JSpinner[] boundaryFields;
     private JSpinner labelTypeField;
+    private JLabel headlineLabel;
 
-    public DesignPropertiesDialogPane() {
+    public DesignPropertiesPane() {
         nameField = makeTextField();
         boundaryFields = new JSpinner[4];
         for (int i = 0; i < boundaryFields.length; ++i) {
@@ -34,7 +35,8 @@ public class DesignPropertiesDialogPane extends ComponentDialogPane {
     private JPanel layOutComponents() {
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-        p.add(panelOf("New design"));
+        headlineLabel = new JLabel("New design");
+        p.add(panelOf(headlineLabel));
         p.add(panelOf("Name:", nameField));
         p.add(panelOf("X min:", boundaryFields[0], "X max:", boundaryFields[1]));
         p.add(panelOf("Y min:", boundaryFields[2], "Y max:", boundaryFields[3]));
@@ -57,6 +59,10 @@ public class DesignPropertiesDialogPane extends ComponentDialogPane {
     protected boolean valid() {
         return (getNameInput()!=null && Arrays.stream(boundaryFields).allMatch(f -> f.getValue()!=null)
                 && labelTypeField!=null);
+    }
+
+    public void setDesign(Design design) {
+        headlineLabel.setText(design==null ? "New design" : "Edit design");
     }
 
     public Design getNewDesign() {

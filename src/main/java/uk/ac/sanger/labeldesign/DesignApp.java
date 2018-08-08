@@ -2,8 +2,8 @@ package uk.ac.sanger.labeldesign;
 
 import uk.ac.sanger.labeldesign.component.DesignAction;
 import uk.ac.sanger.labeldesign.component.DesignFrame;
-import uk.ac.sanger.labeldesign.component.dialog.DesignPropertiesDialogPane;
-import uk.ac.sanger.labeldesign.component.dialog.StringFieldPropertiesDialogPane;
+import uk.ac.sanger.labeldesign.component.dialog.DesignPropertiesPane;
+import uk.ac.sanger.labeldesign.component.dialog.StringFieldPropertiesPane;
 import uk.ac.sanger.labeldesign.conversion.*;
 import uk.ac.sanger.labeldesign.model.Design;
 import uk.ac.sanger.labeldesign.model.StringField;
@@ -50,7 +50,7 @@ public class DesignApp implements Runnable {
 
     private void createFrame() {
         frame = new DesignFrame(renderFactory);
-        frame.setBounds(50, 50, 700, 400);
+        frame.setBounds(50, 50, 900, 400);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
@@ -81,6 +81,7 @@ public class DesignApp implements Runnable {
         SELECT_NONE(MenuGroup.Edit, "Select none", DesignApp::selectNone),
         ADD_STRING(MenuGroup.Edit, "Add string field", DesignApp::addStringField),
         ADD_BARCODE(MenuGroup.Edit, "Add barcode", DesignApp::addBarcodeField),
+        EDIT_LABEL(MenuGroup.Edit, "Edit label properties", DesignApp::editLabel),
         ;
 
         private final MenuGroup menuGroup;
@@ -116,12 +117,15 @@ public class DesignApp implements Runnable {
     }
 
     private void newDesign() {
-        DesignPropertiesDialogPane ndop = new DesignPropertiesDialogPane();
-        if (ndop.showDialog("New design", frame)) {
-            Design design = ndop.getNewDesign();
-            frame.setTitle(design.getName());
-            setDesign(design);
-        }
+        final DesignPropertiesPane ndop = new DesignPropertiesPane();
+        ndop.setCloseAction(() -> {
+            if (ndop.isOkPressed()) {
+                Design design = ndop.getNewDesign();
+                setDesign(design);
+            }
+            frame.clearPropertiesView();
+        });
+        frame.setPropertiesView(ndop);
     }
 
     private JMenuBar createMenuBar() {
@@ -150,7 +154,7 @@ public class DesignApp implements Runnable {
         if (design==null) {
             return;
         }
-        StringFieldPropertiesDialogPane dp = new StringFieldPropertiesDialogPane(design, renderFactory);
+        StringFieldPropertiesPane dp = new StringFieldPropertiesPane(design, renderFactory);
         if (dp.showDialog("New string field", frame)) {
             StringField sf = dp.makeStringField();
             design.getStringFields().add(sf);
@@ -279,6 +283,22 @@ public class DesignApp implements Runnable {
 
     private void selectNone() {
         frame.deselect();
+    }
+
+    private void editLabel() {
+        DesignPropertiesPane dp = new DesignPropertiesPane();
+        dp.setDesign(getDesign());
+        frame.setPropertiesView(dp);
+        dp.setCloseAction(() -> {
+            if (dp.isOkPressed()) {
+                Design design = getDesign();
+                if (design!=null) {
+                    dp.updateDesign(design);
+                    frame.repaintDesign();
+                }
+            }
+            frame.clearPropertiesView();
+        });
     }
 
     private void addBarcodeField() {

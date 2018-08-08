@@ -11,7 +11,7 @@ import java.beans.PropertyChangeListener;
 /**
  * @author dr6
  */
-abstract class ComponentDialogPane extends JPanel {
+abstract class PropertiesPane extends JPanel {
     protected JButton okButton, cancelButton;
 
     private DocumentListener docListener;
@@ -21,7 +21,7 @@ abstract class ComponentDialogPane extends JPanel {
     private boolean okPressed;
     private Runnable closeAction;
 
-    public ComponentDialogPane() {
+    public PropertiesPane() {
         setLayout(new BorderLayout());
         JPanel buttonPanel = new JPanel();
         okButton = new JButton("OK");
