@@ -40,6 +40,14 @@ public class DesignFrame extends JFrame {
         }
     }
 
+    public void selectAll() {
+        designPanel.selectAll();
+    }
+
+    public void deselect() {
+        designPanel.deselect();
+    }
+
     public void repaintDesign() {
         designPanel.repaint();
     }

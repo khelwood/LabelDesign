@@ -77,6 +77,8 @@ public class DesignApp implements Runnable {
         SAVE_AS(MenuGroup.File, "Save design as", DesignApp::saveDesignAs),
         EXPORT_JSON(MenuGroup.File, "Export JSON", DesignApp::exportJson),
 
+        SELECT_ALL(MenuGroup.Edit, "Select all", DesignApp::selectAll),
+        SELECT_NONE(MenuGroup.Edit, "Select none", DesignApp::selectNone),
         ADD_STRING(MenuGroup.Edit, "Add string field", DesignApp::addStringField),
         ADD_BARCODE(MenuGroup.Edit, "Add barcode", DesignApp::addBarcodeField),
         ;
@@ -269,6 +271,14 @@ public class DesignApp implements Runnable {
             return path;
         }
         return Paths.get(fd.getDirectory(), fd.getFile());
+    }
+
+    private void selectAll() {
+        frame.selectAll();
+    }
+
+    private void selectNone() {
+        frame.deselect();
     }
 
     private void addBarcodeField() {

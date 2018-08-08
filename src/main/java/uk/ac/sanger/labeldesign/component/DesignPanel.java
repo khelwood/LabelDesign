@@ -126,6 +126,16 @@ public class DesignPanel extends JPanel {
         repaint();
     }
 
+    public void selectAll() {
+        selection.clear();
+        if (design==null) {
+            return;
+        }
+        selection.addAll(design.getStringFields());
+        selection.addAll(design.getBarcodeFields());
+        repaint();
+    }
+
     public boolean toggleSelection(DesignField df) {
         return selection.toggle(df);
     }

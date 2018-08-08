@@ -84,6 +84,18 @@ public class DesignSelection implements Iterable<DesignField> {
         return selected.add(df);
     }
 
+    public void addAll(Collection<? extends DesignField> fields) {
+        Objects.requireNonNull(fields, "Cannot add all (null) to selection");
+        if (selected.isEmpty()) {
+            selected = new HashSet<>(fields);
+            return;
+        }
+        if (!(selected instanceof HashSet)) {
+            selected = new HashSet<>(selected);
+        }
+        selected.addAll(fields);
+    }
+
     public boolean contains(DesignField df) {
         return (selected.contains(df) || selectedInRect.contains(df));
     }
