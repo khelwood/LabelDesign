@@ -1,5 +1,6 @@
 package uk.ac.sanger.labeldesign.component;
 
+import uk.ac.sanger.labeldesign.component.dialog.PropertiesPane;
 import uk.ac.sanger.labeldesign.model.Design;
 import uk.ac.sanger.labeldesign.view.RenderFactory;
 
@@ -41,6 +42,10 @@ public class DesignFrame extends JFrame {
         return this.designPanel.getDesign();
     }
 
+    public DesignPanel getDesignPanel() {
+        return this.designPanel;
+    }
+
     public void setPropertiesView(Component component) {
         propertiesScrollPane.setViewportView(component);
     }
@@ -66,5 +71,13 @@ public class DesignFrame extends JFrame {
 
     public void repaintDesign() {
         designPanel.repaint();
+    }
+
+    public PropertiesPane getPropertiesView() {
+        Component component = propertiesScrollPane.getViewport().getView();
+        if (component instanceof PropertiesPane) {
+            return (PropertiesPane) component;
+        }
+        return null;
     }
 }

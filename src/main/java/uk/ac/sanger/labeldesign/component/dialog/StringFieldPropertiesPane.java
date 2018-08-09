@@ -1,13 +1,11 @@
 package uk.ac.sanger.labeldesign.component.dialog;
 
-import uk.ac.sanger.labeldesign.model.Design;
-import uk.ac.sanger.labeldesign.model.StringField;
+import uk.ac.sanger.labeldesign.model.*;
 import uk.ac.sanger.labeldesign.view.RenderFactory;
 
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.util.function.Predicate;
-import java.util.stream.IntStream;
 
 /**
  * @author dr6
@@ -22,14 +20,12 @@ public class StringFieldPropertiesPane extends PropertiesPane {
     private JLabel headlineLabel;
 
     public StringFieldPropertiesPane(Design design, RenderFactory renderFactory) {
-        int wi = design.getWidth();
-        int hi = design.getHeight();
         nameField = makeTextField();
         stringField = makeTextField();
         stringField.setText("Placeholder string");
         stringField.selectAll();
-        xField = makeSpinner(wi/2, 0, wi, 10);
-        yField = makeSpinner(hi/2, 0, hi, 10);
+        xField = makeSpinner((design.getXMin()+design.getXMax())/2, null, null, 10);
+        yField = makeSpinner((design.getYMin()+design.getYMax())/2, null, null, 10);
         spacingField = makeSpinner(0, 0, null, 1);
         fontCodeField = makeFontCodeCombo(renderFactory);
         rotationField = makeRotationCombo();
@@ -133,4 +129,14 @@ public class StringFieldPropertiesPane extends PropertiesPane {
         return combo;
     }
 
+    @Override
+    public void dragged(DesignField field) {
+        if (field instanceof StringField) {
+            boolean listening = isChangeListening();
+            setChangeListening(false);
+            xField.setValue(field.getX());
+            yField.setValue(field.getY());
+            setChangeListening(listening);
+        }
+    }
 }

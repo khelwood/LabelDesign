@@ -3,4 +3,6 @@
 * Adding barcodes
 * Importing from pmb json template
 * Support deleting fields
-* Update properties panel when you drag or delete the field in the design panel
+* Update properties pane when you delete the field in the design panel
+* Tidy up properties pane when a new properties pane is activated
+

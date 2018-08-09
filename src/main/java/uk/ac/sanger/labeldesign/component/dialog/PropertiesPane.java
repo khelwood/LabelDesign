@@ -1,16 +1,18 @@
 package uk.ac.sanger.labeldesign.component.dialog;
 
 import uk.ac.sanger.labeldesign.component.QuickDocumentListener;
+import uk.ac.sanger.labeldesign.model.DesignField;
 
 import javax.swing.*;
 import javax.swing.event.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ItemListener;
 
 /**
  * @author dr6
  */
-abstract class PropertiesPane extends JPanel {
+public abstract class PropertiesPane extends JPanel {
     protected JButton okButton, cancelButton;
 
     private DocumentListener fieldDocListener;
@@ -18,6 +20,7 @@ abstract class PropertiesPane extends JPanel {
     private ItemListener fieldItemListener;
 
     private ChangeListener changeListener;
+    private boolean changeListening = true;
 
     private boolean okPressed;
     private Runnable closeAction;
@@ -109,8 +112,16 @@ abstract class PropertiesPane extends JPanel {
 
     protected abstract boolean valid();
 
+    public boolean isChangeListening() {
+        return this.changeListening;
+    }
+
+    public void setChangeListening(boolean changeListening) {
+        this.changeListening = changeListening;
+    }
+
     protected void updateState() {
-        if (changeListener!=null) {
+        if (changeListener!=null && isChangeListening()) {
             changeListener.stateChanged(new ChangeEvent(this));
         }
         okButton.setEnabled(valid());
@@ -118,6 +129,10 @@ abstract class PropertiesPane extends JPanel {
 
     public void setCloseAction(Runnable closeAction) {
         this.closeAction = closeAction;
+    }
+
+    public void dragged(DesignField field) {
+        // do nothing
     }
 
 }

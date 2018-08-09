@@ -1,5 +1,6 @@
 package uk.ac.sanger.labeldesign.component;
 
+import uk.ac.sanger.labeldesign.DesignApp;
 import uk.ac.sanger.labeldesign.model.Design;
 import uk.ac.sanger.labeldesign.model.DesignField;
 
@@ -12,27 +13,26 @@ import java.awt.event.MouseEvent;
  */
 public class MouseControl extends MouseAdapter {
     private static final int C_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+    private static boolean isEditEvent(MouseEvent event) {
+        return (event.getModifiers() & C_MASK)!=0;
+    }
 
-    private DesignPanel designPanel;
+    private DesignApp app;
     private int lastX, lastY;
     private boolean inSpace;
     private boolean editMode;
     private boolean allowDragging;
 
-    public MouseControl(DesignPanel designPanel) {
-        this.designPanel = designPanel;
+    public MouseControl(DesignApp app) {
+        this.app = app;
     }
 
     private Design getDesign() {
-        return designPanel.getDesign();
+        return app.getDesign();
     }
 
     private DesignField fieldAt(MouseEvent e) {
-        return designPanel.getFieldAt(e.getX(), e.getY());
-    }
-
-    private static boolean editSelection(MouseEvent event) {
-        return (event.getModifiers() & C_MASK)!=0;
+        return app.getDesignPanel().getFieldAt(e.getX(), e.getY());
     }
 
     @Override
@@ -40,7 +40,8 @@ public class MouseControl extends MouseAdapter {
         if (!isEnabled()) {
             return;
         }
-        editMode = editSelection(event);
+        DesignPanel designPanel = app.getDesignPanel();
+        editMode = isEditEvent(event);
         DesignField field = fieldAt(event);
         allowDragging = false;
         if (editMode) {
@@ -65,6 +66,7 @@ public class MouseControl extends MouseAdapter {
         if (!isEnabled()) {
             return;
         }
+        DesignPanel designPanel = app.getDesignPanel();
         if (!editMode) {
             designPanel.deselect();
             DesignField field = fieldAt(event);
@@ -79,12 +81,15 @@ public class MouseControl extends MouseAdapter {
         if (!isEnabled()) {
             return;
         }
+        DesignPanel designPanel = app.getDesignPanel();
         int x = event.getX();
         int y = event.getY();
         if (inSpace) {
             designPanel.setSelectionRect(lastX, lastY, x, y);
         } else if (allowDragging) {
-            designPanel.drag(x-lastX, y-lastY);
+            if (designPanel.drag(x-lastX, y-lastY)) {
+                app.fieldsDragged();
+            }
             lastX = x;
             lastY = y;
         }
@@ -93,6 +98,7 @@ public class MouseControl extends MouseAdapter {
     @Override
     public void mouseReleased(MouseEvent e) {
         super.mouseReleased(e);
+        DesignPanel designPanel = app.getDesignPanel();
         designPanel.clearSelectionRect();
         allowDragging = false;
     }

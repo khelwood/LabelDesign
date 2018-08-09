@@ -21,7 +21,9 @@ public class DesignPanel extends JPanel {
 
     public DesignPanel(RenderFactory renderFactory) {
         this.renderFactory = renderFactory;
-        MouseControl mouseControl = new MouseControl(this);
+    }
+
+    public void addMouseControl(MouseControl mouseControl) {
         addMouseListener(mouseControl);
         addMouseMotionListener(mouseControl);
     }
@@ -144,14 +146,15 @@ public class DesignPanel extends JPanel {
         return selection.contains(df);
     }
 
-    public void drag(int dx, int dy) {
+    public boolean drag(int dx, int dy) {
         if (selection.isEmpty()) {
-            return;
+            return false;
         }
         for (DesignField df : selection) {
             df.translate(dx, dy);
         }
         repaint();
+        return true;
     }
 
     @Override

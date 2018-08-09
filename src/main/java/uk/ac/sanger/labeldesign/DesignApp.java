@@ -1,9 +1,7 @@
 package uk.ac.sanger.labeldesign;
 
-import uk.ac.sanger.labeldesign.component.DesignAction;
-import uk.ac.sanger.labeldesign.component.DesignFrame;
-import uk.ac.sanger.labeldesign.component.dialog.DesignPropertiesPane;
-import uk.ac.sanger.labeldesign.component.dialog.StringFieldPropertiesPane;
+import uk.ac.sanger.labeldesign.component.*;
+import uk.ac.sanger.labeldesign.component.dialog.*;
 import uk.ac.sanger.labeldesign.conversion.*;
 import uk.ac.sanger.labeldesign.model.*;
 import uk.ac.sanger.labeldesign.view.RenderFactory;
@@ -29,6 +27,7 @@ public class DesignApp implements Runnable {
     private DesignFrame frame;
     private Map<OperationEnum, DesignAction> actions;
     private Path filePath;
+    private DesignField editingField;
 
     @Override
     public void run() {
@@ -50,12 +49,17 @@ public class DesignApp implements Runnable {
 
     private void createFrame() {
         frame = new DesignFrame(renderFactory);
+        frame.getDesignPanel().addMouseControl(new MouseControl(this));
         frame.setBounds(50, 50, 900, 400);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     public Design getDesign() {
         return frame.getDesign();
+    }
+
+    public DesignPanel getDesignPanel() {
+        return frame.getDesignPanel();
     }
 
     public void setDesign(Design design) {
@@ -161,6 +165,7 @@ public class DesignApp implements Runnable {
         propPane.loadStringField(null);
         frame.setPropertiesView(propPane);
         final StringField sf = new StringField();
+        editingField = sf;
         propPane.updateStringField(sf);
         design.getStringFields().add(sf);
         repaintDesign();
@@ -177,7 +182,18 @@ public class DesignApp implements Runnable {
                 repaintDesign();
             }
             frame.clearPropertiesView();
+            editingField = null;
         });
+    }
+
+    public void fieldsDragged() {
+        if (editingField!=null) {
+            PropertiesPane propPane = frame.getPropertiesView();
+            if (propPane!=null) {
+                propPane.dragged(editingField);
+            }
+            repaintDesign();
+        }
     }
 
     private void saveDesign() {
