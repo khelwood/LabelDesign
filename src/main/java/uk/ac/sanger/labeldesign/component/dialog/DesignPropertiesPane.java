@@ -61,15 +61,18 @@ public class DesignPropertiesPane extends PropertiesPane {
                 && labelTypeField!=null);
     }
 
-    public void setDesign(Design design) {
+    public void loadDesign(Design design) {
         headlineLabel.setText(design==null ? "New design" : "Edit design");
+        cancelButton.setVisible(design==null);
+        if (design!=null) {
+            nameField.setText(design.getName());
+            boundaryFields[0].setValue(design.getXMin());
+            boundaryFields[1].setValue(design.getXMax());
+            boundaryFields[2].setValue(design.getYMin());
+            boundaryFields[3].setValue(design.getYMax());
+            labelTypeField.setValue(design.getLabelTypeId());
+        }
     }
-
-    public Design getNewDesign() {
-        Design design = new Design();
-        updateDesign(design);
-        return design;
-   }
 
     public void updateDesign(Design design) {
         String name = getNameInput();
@@ -80,7 +83,7 @@ public class DesignPropertiesPane extends PropertiesPane {
         int x1 = (int) boundaryFields[1].getValue();
         int y0 = (int) boundaryFields[2].getValue();
         int y1 = (int) boundaryFields[3].getValue();
-        int labelType = (int) (Integer) labelTypeField.getValue();
+        int labelType = (int) labelTypeField.getValue();
         design.setBounds(x0, y0, x1, y1);
         design.setLabelTypeId(labelType);
     }

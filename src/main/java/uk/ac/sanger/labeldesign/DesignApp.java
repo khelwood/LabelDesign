@@ -120,8 +120,10 @@ public class DesignApp implements Runnable {
         final DesignPropertiesPane ndop = new DesignPropertiesPane();
         ndop.setCloseAction(() -> {
             if (ndop.isOkPressed()) {
-                Design design = ndop.getNewDesign();
+                Design design = new Design();
+                ndop.updateDesign(design);
                 setDesign(design);
+                filePath = null;
             }
             frame.clearPropertiesView();
         });
@@ -287,7 +289,7 @@ public class DesignApp implements Runnable {
 
     private void editLabel() {
         DesignPropertiesPane dp = new DesignPropertiesPane();
-        dp.setDesign(getDesign());
+        dp.loadDesign(getDesign());
         frame.setPropertiesView(dp);
         dp.setCloseAction(() -> {
             if (dp.isOkPressed()) {
@@ -298,6 +300,14 @@ public class DesignApp implements Runnable {
                 }
             }
             frame.clearPropertiesView();
+        });
+        dp.setChangeListener(e -> {
+            Design design = getDesign();
+            if (design!=null) {
+                dp.updateDesign(design);
+                frame.repaintDesign();
+                frame.setTitle(design.getName());
+            }
         });
     }
 

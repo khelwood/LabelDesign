@@ -153,4 +153,12 @@ public class DesignPanel extends JPanel {
         }
         repaint();
     }
+
+    @Override
+    public Dimension getPreferredSize() {
+        if (design==null) {
+            return super.getPreferredSize();
+        }
+        return new Dimension(design.getWidth(), design.getHeight());
+    }
 }

@@ -3,8 +3,7 @@ package uk.ac.sanger.labeldesign.component.dialog;
 import uk.ac.sanger.labeldesign.component.QuickDocumentListener;
 
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.DocumentListener;
+import javax.swing.event.*;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
 
@@ -14,9 +13,11 @@ import java.beans.PropertyChangeListener;
 abstract class PropertiesPane extends JPanel {
     protected JButton okButton, cancelButton;
 
-    private DocumentListener docListener;
+    private DocumentListener fieldDocListener;
+    private ChangeListener fieldChangeListener;
+    private PropertyChangeListener fieldPropChangeListener;
+
     private ChangeListener changeListener;
-    private PropertyChangeListener propChangeListener;
 
     private boolean okPressed;
     private Runnable closeAction;
@@ -45,30 +46,34 @@ abstract class PropertiesPane extends JPanel {
         return line;
     }
 
-    protected DocumentListener getDocumentListener() {
-        if (docListener==null) {
-            docListener = (QuickDocumentListener) this::updateState;
+    protected DocumentListener getFieldDocListener() {
+        if (fieldDocListener ==null) {
+            fieldDocListener = (QuickDocumentListener) this::updateState;
         }
-        return docListener;
+        return fieldDocListener;
     }
 
-    protected ChangeListener getChangeListener() {
-        if (changeListener==null) {
-            changeListener = e -> this.updateState();
+    protected ChangeListener getFieldChangeListener() {
+        if (fieldChangeListener ==null) {
+            fieldChangeListener = e -> this.updateState();
         }
-        return changeListener;
+        return fieldChangeListener;
     }
 
-    protected PropertyChangeListener getPropertyChangeListener() {
-        if (propChangeListener==null) {
-            propChangeListener = e -> updateState();
+    protected PropertyChangeListener getFieldPropChangeListener() {
+        if (fieldPropChangeListener ==null) {
+            fieldPropChangeListener = e -> updateState();
         }
-        return propChangeListener;
+        return fieldPropChangeListener;
+    }
+
+    public void setChangeListener(ChangeListener changeListener) {
+        this.changeListener = changeListener;
     }
 
     protected JTextField makeTextField() {
         JTextField tf = new JTextField(12);
-        tf.getDocument().addDocumentListener(getDocumentListener());
+        tf.getDocument().addDocumentListener(getFieldDocListener());
         return tf;
     }
 
@@ -79,7 +84,7 @@ abstract class PropertiesPane extends JPanel {
 
     protected JSpinner makeSpinner(SpinnerModel model) {
         JSpinner spinner = new JSpinner(model);
-        spinner.addChangeListener(getChangeListener());
+        spinner.addChangeListener(getFieldChangeListener());
         return spinner;
     }
 
@@ -89,7 +94,7 @@ abstract class PropertiesPane extends JPanel {
         combo.addItem("1: Rotated 90° clockwise");
         combo.addItem("2: Rotated 180°");
         combo.addItem("3: Rotated 270° clockwise");
-        combo.addPropertyChangeListener(getPropertyChangeListener());
+        combo.addPropertyChangeListener(getFieldPropChangeListener());
         return combo;
     }
 
@@ -105,6 +110,9 @@ abstract class PropertiesPane extends JPanel {
     protected abstract boolean valid();
 
     protected void updateState() {
+        if (changeListener!=null) {
+            changeListener.stateChanged(new ChangeEvent(this));
+        }
         okButton.setEnabled(valid());
     }
 

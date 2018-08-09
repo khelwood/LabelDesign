@@ -96,7 +96,7 @@ public class StringFieldPropertiesPane extends PropertiesPane {
         JComboBox<String> combo = new JComboBox<>();
         renderFactory.fontDescs()
                 .forEach(e -> combo.addItem(e.getKey()+": "+e.getValue()));
-        combo.addPropertyChangeListener(getPropertyChangeListener());
+        combo.addPropertyChangeListener(getFieldPropChangeListener());
         return combo;
     }
 
