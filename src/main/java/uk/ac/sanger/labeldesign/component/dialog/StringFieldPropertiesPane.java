@@ -6,6 +6,8 @@ import uk.ac.sanger.labeldesign.view.RenderFactory;
 
 import javax.swing.*;
 import java.awt.BorderLayout;
+import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 /**
  * @author dr6
@@ -17,6 +19,7 @@ public class StringFieldPropertiesPane extends PropertiesPane {
     private JSpinner spacingField;
     private JComboBox<String> fontCodeField;
     private JComboBox<String> rotationField;
+    private JLabel headlineLabel;
 
     public StringFieldPropertiesPane(Design design, RenderFactory renderFactory) {
         int wi = design.getWidth();
@@ -38,7 +41,9 @@ public class StringFieldPropertiesPane extends PropertiesPane {
     private JPanel layOutComponents() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(panelOf("New string field"));
+        headlineLabel = new JLabel();
+        panel.add(panelOf(headlineLabel));
+        panel.add(panelOf("All fonts are substitutes or approximations."));
         panel.add(panelOf("Font code:", fontCodeField));
         panel.add(panelOf("Name:", nameField));
         panel.add(panelOf("Spacing adjustment:", spacingField));
@@ -64,10 +69,38 @@ public class StringFieldPropertiesPane extends PropertiesPane {
         return item.charAt(0)-'0';
     }
 
-    public StringField makeStringField() {
-        StringField sf = new StringField();
-        updateStringField(sf);
-        return sf;
+    private static <T> boolean comboSelect(JComboBox<T> combo, Predicate<? super T> predicate) {
+        int n = combo.getItemCount();
+        for (int i = 0; i < n; ++i) {
+            T item = combo.getItemAt(i);
+            if (predicate.test(item)) {
+                combo.setSelectedIndex(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void setSelectedRotation(final int rotation) {
+        comboSelect(rotationField, (String s) -> s.charAt(0)==rotation+'0');
+    }
+
+    private void setSelectedFont(final char fontCode) {
+        comboSelect(fontCodeField, (String s) -> s.charAt(0)==fontCode);
+    }
+
+    public void loadStringField(StringField sf) {
+        headlineLabel.setText(sf==null ? "New string field" : "String field properties");
+        cancelButton.setVisible(sf==null);
+        if (sf!=null) {
+            nameField.setText(sf.getName());
+            stringField.setText(sf.getDisplayText());
+            xField.setValue(sf.getX());
+            yField.setValue(sf.getY());
+            spacingField.setValue(sf.getSpacing());
+            setSelectedRotation(sf.getRotation());
+            setSelectedFont(sf.getFontCode());
+        }
     }
 
     public void updateStringField(StringField sf) {
@@ -96,7 +129,7 @@ public class StringFieldPropertiesPane extends PropertiesPane {
         JComboBox<String> combo = new JComboBox<>();
         renderFactory.fontDescs()
                 .forEach(e -> combo.addItem(e.getKey()+": "+e.getValue()));
-        combo.addPropertyChangeListener(getFieldPropChangeListener());
+        combo.addItemListener(getFieldItemListener());
         return combo;
     }
 

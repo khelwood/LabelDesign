@@ -5,8 +5,7 @@ import uk.ac.sanger.labeldesign.component.DesignFrame;
 import uk.ac.sanger.labeldesign.component.dialog.DesignPropertiesPane;
 import uk.ac.sanger.labeldesign.component.dialog.StringFieldPropertiesPane;
 import uk.ac.sanger.labeldesign.conversion.*;
-import uk.ac.sanger.labeldesign.model.Design;
-import uk.ac.sanger.labeldesign.model.StringField;
+import uk.ac.sanger.labeldesign.model.*;
 import uk.ac.sanger.labeldesign.view.RenderFactory;
 import uk.ac.sanger.labeldesign.view.implementation.RenderFactoryImp;
 
@@ -41,7 +40,8 @@ public class DesignApp implements Runnable {
         frame.setVisible(true);
 
         try {
-            Design design = new DesignReader().readDesign(Paths.get("/Users/dr6/Desktop/untitled.lbld"));
+            Design design = new DesignReader().readDesign(Paths.get(System.getProperty("user.home"),
+                    "Desktop", "untitled"+DESIGN_EXTENSION));
             frame.setDesign(design);
         } catch (Exception e) {
             e.printStackTrace();
@@ -118,6 +118,7 @@ public class DesignApp implements Runnable {
 
     private void newDesign() {
         final DesignPropertiesPane ndop = new DesignPropertiesPane();
+        ndop.loadDesign(null);
         ndop.setCloseAction(() -> {
             if (ndop.isOkPressed()) {
                 Design design = new Design();
@@ -156,12 +157,27 @@ public class DesignApp implements Runnable {
         if (design==null) {
             return;
         }
-        StringFieldPropertiesPane dp = new StringFieldPropertiesPane(design, renderFactory);
-        if (dp.showDialog("New string field", frame)) {
-            StringField sf = dp.makeStringField();
-            design.getStringFields().add(sf);
+        StringFieldPropertiesPane propPane = new StringFieldPropertiesPane(design, renderFactory);
+        propPane.loadStringField(null);
+        frame.setPropertiesView(propPane);
+        final StringField sf = new StringField();
+        propPane.updateStringField(sf);
+        design.getStringFields().add(sf);
+        repaintDesign();
+        propPane.setChangeListener(e -> {
+            propPane.updateStringField(sf);
             repaintDesign();
-        }
+        });
+        propPane.setCloseAction(() -> {
+            if (propPane.isOkPressed()) {
+                propPane.updateStringField(sf);
+                repaintDesign();
+            } else {
+                design.getStringFields().remove(sf);
+                repaintDesign();
+            }
+            frame.clearPropertiesView();
+        });
     }
 
     private void saveDesign() {

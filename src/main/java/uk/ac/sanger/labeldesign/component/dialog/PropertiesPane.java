@@ -5,7 +5,7 @@ import uk.ac.sanger.labeldesign.component.QuickDocumentListener;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
-import java.beans.PropertyChangeListener;
+import java.awt.event.ItemListener;
 
 /**
  * @author dr6
@@ -15,7 +15,7 @@ abstract class PropertiesPane extends JPanel {
 
     private DocumentListener fieldDocListener;
     private ChangeListener fieldChangeListener;
-    private PropertyChangeListener fieldPropChangeListener;
+    private ItemListener fieldItemListener;
 
     private ChangeListener changeListener;
 
@@ -60,11 +60,11 @@ abstract class PropertiesPane extends JPanel {
         return fieldChangeListener;
     }
 
-    protected PropertyChangeListener getFieldPropChangeListener() {
-        if (fieldPropChangeListener ==null) {
-            fieldPropChangeListener = e -> updateState();
+    protected ItemListener getFieldItemListener() {
+        if (fieldItemListener==null) {
+            fieldItemListener = e -> updateState();
         }
-        return fieldPropChangeListener;
+        return fieldItemListener;
     }
 
     public void setChangeListener(ChangeListener changeListener) {
@@ -94,7 +94,7 @@ abstract class PropertiesPane extends JPanel {
         combo.addItem("1: Rotated 90° clockwise");
         combo.addItem("2: Rotated 180°");
         combo.addItem("3: Rotated 270° clockwise");
-        combo.addPropertyChangeListener(getFieldPropChangeListener());
+        combo.addItemListener(getFieldItemListener());
         return combo;
     }
 
@@ -120,14 +120,4 @@ abstract class PropertiesPane extends JPanel {
         this.closeAction = closeAction;
     }
 
-    public boolean showDialog(String title, Frame frame) {
-        JDialog dialog = new JDialog(frame, title, true);
-        dialog.setContentPane(this);
-        dialog.pack();
-        dialog.setLocationRelativeTo(frame);
-        this.setCloseAction(dialog::dispose);
-        dialog.getRootPane().setDefaultButton(okButton);
-        dialog.setVisible(true);
-        return isOkPressed();
-    }
 }

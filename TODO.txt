@@ -1,7 +1,6 @@
-* Show edit pane in a side pane
-* Use side-pane edit pane when adding new field
 * Field name uniqueness
 * Side pane should list all components when none is selected
 * Adding barcodes
-* Warning that fonts are approximations
 * Importing from pmb json template
+* Support deleting fields
+* Update properties panel when you drag or delete the field in the design panel
