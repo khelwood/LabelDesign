@@ -95,7 +95,7 @@ public abstract class PropertiesPane extends JPanel {
 
     protected JComboBox<String> makeRotationCombo() {
         JComboBox<String> combo = new JComboBox<>();
-        combo.addItem("0: Normal");
+        combo.addItem("0: Unrotated");
         combo.addItem("1: Rotated 90° clockwise");
         combo.addItem("2: Rotated 180°");
         combo.addItem("3: Rotated 270° clockwise");

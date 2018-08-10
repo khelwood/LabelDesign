@@ -26,7 +26,7 @@ public class DesignFrame extends JFrame {
         propertiesScrollPane = new JScrollPane(new JPanel());
 
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, designScrollPane, propertiesScrollPane);
-        splitPane.setDividerLocation(600);
+        splitPane.setDividerLocation(550);
         splitPane.setResizeWeight(1);
 
         setContentPane(splitPane);

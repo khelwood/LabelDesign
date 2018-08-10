@@ -1,5 +1,6 @@
 package uk.ac.sanger.labeldesign;
 
+import uk.ac.sanger.labeldesign.DesignApp.MenuGroup;
 import uk.ac.sanger.labeldesign.component.DesignAction;
 
 import java.util.function.Consumer;
@@ -8,32 +9,40 @@ import java.util.function.Consumer;
  * @author dr6
  */
 public enum OperationEnum implements DesignAction.Operation {
-    NEW_DESIGN(DesignApp.MenuGroup.File, "New design", DesignApp::newDesign),
-    LOAD_DESIGN(DesignApp.MenuGroup.File, "Open design", DesignApp::loadDesign),
-    SAVE_DESIGN(DesignApp.MenuGroup.File, "Save design", DesignApp::saveDesign),
-    SAVE_AS(DesignApp.MenuGroup.File, "Save design as", DesignApp::saveDesignAs),
-    EXPORT_JSON(DesignApp.MenuGroup.File, "Export JSON", DesignApp::exportJson),
+    NEW_DESIGN(MenuGroup.File, "New design", DesignApp::newDesign),
+    LOAD_DESIGN(MenuGroup.File, "Open design", DesignApp::loadDesign),
+    SAVE_DESIGN(MenuGroup.File, "Save design", DesignApp::saveDesign, 1),
+    SAVE_AS(MenuGroup.File, "Save design as", DesignApp::saveDesignAs, 1),
+    EXPORT_JSON(MenuGroup.File, "Export JSON", DesignApp::exportJson, 2),
 
-    SELECT_ALL(DesignApp.MenuGroup.Edit, "Select all", DesignApp::selectAll),
-    SELECT_NONE(DesignApp.MenuGroup.Edit, "Select none", DesignApp::selectNone),
-    DELETE_SELECTED(DesignApp.MenuGroup.Edit, "Delete selected", DesignApp::deleteSelected),
-    ADD_STRING(DesignApp.MenuGroup.Edit, "Add string field", DesignApp::addStringField),
-    ADD_BARCODE(DesignApp.MenuGroup.Edit, "Add barcode", DesignApp::addBarcodeField),
-    EDIT_LABEL(DesignApp.MenuGroup.Edit, "Edit label properties", DesignApp::editLabel),;
+    SELECT_ALL(MenuGroup.Edit, "Select all", DesignApp::selectAll),
+    SELECT_NONE(MenuGroup.Edit, "Select none", DesignApp::selectNone),
+    DELETE_SELECTED(MenuGroup.Edit, "Delete selected", DesignApp::deleteSelected),
+    EDIT_LABEL(MenuGroup.Edit, "Edit label properties", DesignApp::editLabel, 1),
+    ADD_STRING(MenuGroup.Edit, "Add string field", DesignApp::addStringField, 2),
+    ADD_BARCODE(MenuGroup.Edit, "Add barcode", DesignApp::addBarcodeField, 2),
 
-    private final DesignApp.MenuGroup menuGroup;
-    private final String string;
+    ;
+
+    private final MenuGroup menuGroup;
+    private final String actionName;
     private final Consumer<DesignApp> function;
+    private final int groupIndex;
 
-    OperationEnum(DesignApp.MenuGroup menuGroup, String string, Consumer<DesignApp> function) {
+    OperationEnum(MenuGroup menuGroup, String actionName, Consumer<DesignApp> function, int groupIndex) {
         this.menuGroup = menuGroup;
-        this.string = string;
+        this.actionName = actionName;
         this.function = function;
+        this.groupIndex = groupIndex;
+    }
+
+    OperationEnum(MenuGroup menuGroup, String actionName, Consumer<DesignApp> function) {
+        this(menuGroup, actionName, function, 0);
     }
 
     @Override
     public String getActionName() {
-        return this.string;
+        return this.actionName;
     }
 
     @Override
@@ -41,7 +50,11 @@ public enum OperationEnum implements DesignAction.Operation {
         this.function.accept(app);
     }
 
-    public DesignApp.MenuGroup getMenuGroup() {
+    public MenuGroup getMenuGroup() {
         return this.menuGroup;
+    }
+
+    public int getGroupIndex() {
+        return this.groupIndex;
     }
 }

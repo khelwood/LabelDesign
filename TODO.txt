@@ -1,6 +1,4 @@
 * Importing from pmb json template
-* Tidy up properties pane when a new properties pane is activated
-* Barcode rotation
 
 * Field name uniqueness?
 * Barcode types?

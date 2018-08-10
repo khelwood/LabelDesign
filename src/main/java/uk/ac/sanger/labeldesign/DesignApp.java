@@ -154,10 +154,21 @@ public class DesignApp implements Runnable {
             menus.put(mg, menu);
             menuBar.add(menu);
         }
+        Map<DesignApp.MenuGroup, Integer> menuGroupIndex = new EnumMap<>(MenuGroup.class);
         for (OperationEnum op : OperationEnum.values()) {
-            if (op.getMenuGroup()!=null) {
-                menus.get(op.getMenuGroup()).add(actions.get(op));
+            MenuGroup menuGroup = op.getMenuGroup();
+            if (menuGroup==null) {
+                continue;
             }
+            JMenu menu = menus.get(menuGroup);
+            Integer curGroup = menuGroupIndex.get(menuGroup);
+            if (curGroup==null) {
+                menuGroupIndex.put(menuGroup, op.getGroupIndex());
+            } else if (curGroup != op.getGroupIndex()) {
+                menuGroupIndex.put(menuGroup, op.getGroupIndex());
+                menu.addSeparator();
+            }
+            menu.add(actions.get(op));
         }
         return menuBar;
     }
