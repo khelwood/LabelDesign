@@ -43,12 +43,14 @@ public class DesignSelection implements Iterable<DesignField> {
         this.selectedInRect = fields;
     }
 
-    public void finishRect() {
-        if (!this.selectedInRect.isEmpty()) {
+    public boolean finishRect() {
+        boolean anything = !this.selectedInRect.isEmpty();
+        if (anything) {
             this.selected = getSelected();
+            this.selectedInRect = Collections.emptySet();
         }
         this.rect = null;
-        this.selectedInRect = Collections.emptySet();
+        return anything;
     }
 
     public void draw(Graphics g, Map<?, Rectangle> fieldBounds) {
@@ -82,6 +84,10 @@ public class DesignSelection implements Iterable<DesignField> {
             selected = new HashSet<>(selected);
         }
         return selected.add(df);
+    }
+
+    public DesignField getSingleSelected() {
+        return (selected.size()==1 ? selected.iterator().next() : null);
     }
 
     public void addAll(Collection<? extends DesignField> fields) {

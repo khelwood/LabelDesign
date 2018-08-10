@@ -95,6 +95,10 @@ public class DesignPanel extends JPanel {
         return this.design;
     }
 
+    public DesignSelection getDesignSelection() {
+        return this.selection;
+    }
+
     private static int area(Rectangle rect) {
         return rect.width*rect.width + rect.height*rect.height;
     }

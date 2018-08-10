@@ -58,6 +58,51 @@ public class DesignApp implements Runnable {
         return frame.getDesign();
     }
 
+    public DesignSelection getDesignSelection() {
+        return getDesignPanel().getDesignSelection();
+    }
+
+    public boolean toggleSelection(DesignField field) {
+        boolean f = getDesignSelection().toggle(field);
+        if (f) {
+            boopSelection();
+        }
+        repaintDesign();
+        return f;
+    }
+
+    public boolean isSelected(DesignField field) {
+        return getDesignSelection().contains(field);
+    }
+
+    public void select(DesignField field) {
+        getDesignSelection().add(field);
+        boopSelection();
+        repaintDesign();
+    }
+
+    public void setSelectionRect(int x0, int y0, int x1, int y1) {
+        getDesignPanel().setSelectionRect(x0, y0, x1, y1);
+    }
+
+    public void clearSelectionRect() {
+        if (getDesignSelection().finishRect()) {
+            boopSelection();
+        }
+        repaintDesign();
+    }
+
+    public DesignField getFieldAt(int x, int y) {
+        return getDesignPanel().getFieldAt(x, y);
+    }
+
+    private void boopSelection() {
+        DesignField df = getDesignSelection().getSingleSelected();
+        if (df!=null) {
+            openProperties(df);
+        }
+    }
+
     public DesignPanel getDesignPanel() {
         return frame.getDesignPanel();
     }
@@ -170,8 +215,8 @@ public class DesignApp implements Runnable {
         installPane(propPane, sf);
     }
 
-    public void fieldsDragged() {
-        if (editingField!=null) {
+    public void drag(int dx, int dy) {
+        if (getDesignPanel().drag(dx, dy) && editingField!=null) {
             PropertiesPane propPane = frame.getPropertiesView();
             if (propPane!=null) {
                 propPane.dragged(editingField);
@@ -299,8 +344,9 @@ public class DesignApp implements Runnable {
         frame.selectAll();
     }
 
-    private void selectNone() {
-        frame.deselect();
+    public void selectNone() {
+        getDesignSelection().clear();
+        repaintDesign();
     }
 
     private void editLabel() {

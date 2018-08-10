@@ -32,7 +32,7 @@ public class MouseControl extends MouseAdapter {
     }
 
     private DesignField fieldAt(MouseEvent e) {
-        return app.getDesignPanel().getFieldAt(e.getX(), e.getY());
+        return app.getFieldAt(e.getX(), e.getY());
     }
 
     @Override
@@ -40,26 +40,23 @@ public class MouseControl extends MouseAdapter {
         if (!isEnabled()) {
             return;
         }
-        DesignPanel designPanel = app.getDesignPanel();
         editMode = isEditEvent(event);
         DesignField field = fieldAt(event);
         allowDragging = false;
         if (editMode) {
-            allowDragging = (field!=null && designPanel.toggleSelection(field));
-        } else if (field!=null && designPanel.isSelected(field)) {
+            allowDragging = (field!=null && app.toggleSelection(field));
+        } else if (field!=null && app.isSelected(field)) {
             allowDragging = true;
         } else {
-            designPanel.deselect();
+            app.selectNone();
             if (field!=null) {
-                designPanel.select(field);
-                app.openProperties(field);
+                app.select(field);
                 allowDragging = true;
             }
         }
         lastX = event.getX();
         lastY = event.getY();
         inSpace = (field==null);
-        designPanel.repaint();
     }
 
     @Override
@@ -67,13 +64,11 @@ public class MouseControl extends MouseAdapter {
         if (!isEnabled()) {
             return;
         }
-        DesignPanel designPanel = app.getDesignPanel();
         if (!editMode) {
-            designPanel.deselect();
+            app.selectNone();
             DesignField field = fieldAt(event);
             if (field!=null) {
-                designPanel.select(field);
-                app.openProperties(field);
+                app.select(field);
             }
         }
     }
@@ -83,15 +78,12 @@ public class MouseControl extends MouseAdapter {
         if (!isEnabled()) {
             return;
         }
-        DesignPanel designPanel = app.getDesignPanel();
         int x = event.getX();
         int y = event.getY();
         if (inSpace) {
-            designPanel.setSelectionRect(lastX, lastY, x, y);
+            app.setSelectionRect(lastX, lastY, x, y);
         } else if (allowDragging) {
-            if (designPanel.drag(x-lastX, y-lastY)) {
-                app.fieldsDragged();
-            }
+            app.drag(x-lastX, y-lastY);
             lastX = x;
             lastY = y;
         }
@@ -100,8 +92,7 @@ public class MouseControl extends MouseAdapter {
     @Override
     public void mouseReleased(MouseEvent e) {
         super.mouseReleased(e);
-        DesignPanel designPanel = app.getDesignPanel();
-        designPanel.clearSelectionRect();
+        app.clearSelectionRect();
         allowDragging = false;
     }
 
