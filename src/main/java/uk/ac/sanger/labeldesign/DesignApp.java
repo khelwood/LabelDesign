@@ -64,9 +64,7 @@ public class DesignApp implements Runnable {
 
     public boolean toggleSelection(DesignField field) {
         boolean f = getDesignSelection().toggle(field);
-        if (f) {
-            boopSelection();
-        }
+        boopSelection(f);
         repaintDesign();
         return f;
     }
@@ -77,7 +75,7 @@ public class DesignApp implements Runnable {
 
     public void select(DesignField field) {
         getDesignSelection().add(field);
-        boopSelection();
+        boopSelection(true);
         repaintDesign();
     }
 
@@ -87,7 +85,7 @@ public class DesignApp implements Runnable {
 
     public void clearSelectionRect() {
         if (getDesignSelection().finishRect()) {
-            boopSelection();
+            boopSelection(true);
         }
         repaintDesign();
     }
@@ -96,10 +94,12 @@ public class DesignApp implements Runnable {
         return getDesignPanel().getFieldAt(x, y);
     }
 
-    private void boopSelection() {
-        DesignField df = getDesignSelection().getSingleSelected();
+    private void boopSelection(boolean on) {
+        DesignField df = on ? getDesignSelection().getSingleSelected() : null;
         if (df!=null) {
             openProperties(df);
+        } else if (editingField!=null && !getDesignSelection().contains(editingField)) {
+            closeProperties();
         }
     }
 
@@ -346,6 +346,7 @@ public class DesignApp implements Runnable {
 
     public void selectNone() {
         getDesignSelection().clear();
+        boopSelection(false);
         repaintDesign();
     }
 
@@ -381,6 +382,11 @@ public class DesignApp implements Runnable {
         if (field instanceof StringField) {
             openProperties((StringField) field);
         }
+    }
+
+    public void closeProperties() {
+        editingField = null;
+        frame.clearPropertiesView();
     }
 
     private void openProperties(final StringField field) {
