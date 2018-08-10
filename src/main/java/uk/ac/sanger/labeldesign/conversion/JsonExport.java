@@ -22,7 +22,7 @@ public class JsonExport extends JsonOutput {
     }
 
     public JsonValue toJson(BarcodeField bf) {
-        return getBuilderFactory().createObjectBuilder()
+        JsonObjectBuilder builder =  getBuilderFactory().createObjectBuilder()
                 .add("barcode_type", String.valueOf(bf.getBarcodeType()))
                 .add("height", to4s(bf.getHeight()))
                 .add("one_cell_width", to2s(bf.getCellWidth()))
@@ -30,8 +30,11 @@ public class JsonExport extends JsonOutput {
                 .add("rotational_angle", String.valueOf(bf.getRotation()))
                 .add("x_origin", to4s(bf.getX()))
                 .add("y_origin", to4s(bf.getY()))
-                .add("field_name", bf.getName())
-                .build();
+                .add("field_name", bf.getName());
+        if (bf.getBarcodeType()=='5') {
+            builder.add("type_of_check_digit", "2");
+        }
+        return builder.build();
     }
 
     public JsonValue toJson(Design design) {

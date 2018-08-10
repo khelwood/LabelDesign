@@ -27,7 +27,8 @@ public class BarcodeFieldPropertiesPane extends PropertiesPane {
         cellWidthField = makeSpinner(1, 1, null, 1);
         heightField = makeSpinner(1, 1, null, 1);
         typeCodeField = new JComboBox<>();
-        typeCodeField.addItem("Q");
+        typeCodeField.addItem("Q: Data Matrix");
+        typeCodeField.addItem("5: EAN13");
         rotationField = makeRotationCombo();
 
         add(layOutComponents(), BorderLayout.CENTER);
@@ -39,10 +40,9 @@ public class BarcodeFieldPropertiesPane extends PropertiesPane {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         headlineLabel = new JLabel();
         panel.add(panelOf(headlineLabel));
-        panel.add(panelOf("Currently only barcode type Q is supported."));
         panel.add(panelOf("Type code:", typeCodeField));
         panel.add(panelOf("Name:", nameField));
-        panel.add(panelOf("Barcode size estimated based on cell width."));
+        panel.add(panelOf("Barcode sizes are estimates."));
         panel.add(panelOf("Cell width:", cellWidthField));
         panel.add(panelOf("Height:", heightField));
         panel.add(panelOf("X:", xField, "Y:", yField));
