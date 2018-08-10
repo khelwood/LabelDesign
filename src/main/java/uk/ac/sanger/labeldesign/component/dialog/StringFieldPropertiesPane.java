@@ -5,7 +5,6 @@ import uk.ac.sanger.labeldesign.view.RenderFactory;
 
 import javax.swing.*;
 import java.awt.BorderLayout;
-import java.util.function.Predicate;
 
 /**
  * @author dr6
@@ -53,35 +52,7 @@ public class StringFieldPropertiesPane extends PropertiesPane {
     }
 
     private Character getFontCode() {
-        String item = (String) fontCodeField.getSelectedItem();
-        if (item==null) {
-            return null;
-        }
-        return item.charAt(0);
-    }
-
-    private Integer getRotation() {
-        String item = (String) rotationField.getSelectedItem();
-        if (item==null) {
-            return null;
-        }
-        return item.charAt(0)-'0';
-    }
-
-    private static <T> boolean comboSelect(JComboBox<T> combo, Predicate<? super T> predicate) {
-        int n = combo.getItemCount();
-        for (int i = 0; i < n; ++i) {
-            T item = combo.getItemAt(i);
-            if (predicate.test(item)) {
-                combo.setSelectedIndex(i);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void setSelectedRotation(final int rotation) {
-        comboSelect(rotationField, (String s) -> s.charAt(0)==rotation+'0');
+        return getCharacterCode(fontCodeField);
     }
 
     private void setSelectedFont(final char fontCode) {
@@ -96,7 +67,7 @@ public class StringFieldPropertiesPane extends PropertiesPane {
             xField.setValue(sf.getX());
             yField.setValue(sf.getY());
             spacingField.setValue(sf.getSpacing());
-            setSelectedRotation(sf.getRotation());
+            setSelectedRotation(rotationField, sf.getRotation());
             setSelectedFont(sf.getFontCode());
         }
     }
@@ -106,7 +77,7 @@ public class StringFieldPropertiesPane extends PropertiesPane {
         sf.setDisplayText(stringField.getText().trim());
         sf.setPosition((Integer) xField.getValue(), (Integer) yField.getValue());
         Character fontCode = getFontCode();
-        Integer rotation = getRotation();
+        Integer rotation = getRotation(rotationField);
         if (fontCode!=null) {
             sf.setFontCode(fontCode);
         }
@@ -118,9 +89,7 @@ public class StringFieldPropertiesPane extends PropertiesPane {
 
     @Override
     protected boolean valid() {
-        return !(nameField.getText().trim().isEmpty() || stringField.getText().trim().isEmpty()
-                || xField.getValue()==null || yField.getValue()==null
-                || getFontCode()==null || getRotation()==null || spacingField.getValue()==null);
+        return allHaveValues(nameField, stringField, xField, yField, fontCodeField, rotationField, spacingField);
     }
 
     private JComboBox<String> makeFontCodeCombo(RenderFactory renderFactory) {

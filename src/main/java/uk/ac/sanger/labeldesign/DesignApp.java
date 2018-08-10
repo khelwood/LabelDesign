@@ -303,7 +303,7 @@ public class DesignApp implements Runnable {
 
     private static boolean endsWithIgnoreCase(String string, String end) {
         return (string!=null && end!=null && string.length() >= end.length() &&
-           string.regionMatches(true, string.length()-end.length(), end, 0, end.length()));
+                string.regionMatches(true, string.length()-end.length(), end, 0, end.length()));
     }
 
     private static FilenameFilter getFilter(final String extension) {
@@ -351,7 +351,7 @@ public class DesignApp implements Runnable {
     }
 
     private void editLabel() {
-        editingField = null; // TODO - check this
+        closeProperties();
         DesignPropertiesPane dp = new DesignPropertiesPane();
         dp.loadDesign(getDesign());
         frame.setPropertiesView(dp);
@@ -381,6 +381,8 @@ public class DesignApp implements Runnable {
         }
         if (field instanceof StringField) {
             openProperties((StringField) field);
+        } else if (field instanceof BarcodeField) {
+            openProperties((BarcodeField) field);
         }
     }
 
@@ -396,6 +398,16 @@ public class DesignApp implements Runnable {
         }
         StringFieldPropertiesPane propPane = new StringFieldPropertiesPane(design, renderFactory);
         propPane.loadStringField(field);
+        installPane(propPane, field);
+    }
+
+    private void openProperties(final BarcodeField field) {
+        Design design = getDesign();
+        if (design==null) {
+            return;
+        }
+        BarcodeFieldPropertiesPane propPane = new BarcodeFieldPropertiesPane(design, renderFactory);
+        propPane.loadBarcodeField(field);
         installPane(propPane, field);
     }
 
@@ -420,6 +432,36 @@ public class DesignApp implements Runnable {
     }
 
     private void addBarcodeField() {
-        // TODO
+        final Design design = getDesign();
+        if (design==null) {
+            return;
+        }
+        final BarcodeField bf = new BarcodeField();
+        design.getBarcodeFields().add(bf);
+        BarcodeFieldPropertiesPane propPane = new BarcodeFieldPropertiesPane(design, renderFactory);
+        propPane.loadBarcodeField(null);
+        propPane.updateBarcodeField(bf);
+        repaintDesign();
+        installPane(propPane, bf);
+    }
+
+    private void installPane(BarcodeFieldPropertiesPane propPane, final BarcodeField field) {
+        this.editingField = field;
+        frame.setPropertiesView(propPane);
+        final Design design = getDesign();
+        propPane.setChangeListener(e -> {
+            propPane.updateBarcodeField(field);
+            repaintDesign();
+        });
+        propPane.setCloseAction(() -> {
+            if (propPane.isCancelPressed()) {
+                design.getBarcodeFields().remove(field);
+            } else {
+                propPane.updateBarcodeField(field);
+            }
+            repaintDesign();
+            frame.clearPropertiesView();
+            editingField = null;
+        });
     }
 }

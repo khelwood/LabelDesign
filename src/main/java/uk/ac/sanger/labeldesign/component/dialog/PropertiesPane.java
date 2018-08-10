@@ -9,6 +9,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
+import java.util.function.Predicate;
 
 /**
  * @author dr6
@@ -101,6 +102,57 @@ public abstract class PropertiesPane extends JPanel {
         combo.addItemListener(getFieldItemListener());
         return combo;
     }
+
+    protected Integer getRotation(JComboBox<String> rotationField) {
+        Character code = getCharacterCode(rotationField);
+        return (code==null ? null : code - '0');
+    }
+
+    protected static <T> boolean comboSelect(JComboBox<T> combo, Predicate<? super T> predicate) {
+        int n = combo.getItemCount();
+        for (int i = 0; i < n; ++i) {
+            T item = combo.getItemAt(i);
+            if (predicate.test(item)) {
+                combo.setSelectedIndex(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected Character getCharacterCode(JComboBox<String> combo) {
+        String s = (String) combo.getSelectedItem();
+        if (s==null || s.isEmpty()) {
+            return null;
+        }
+        return s.charAt(0);
+    }
+
+    protected void setSelectedRotation(JComboBox<String> rotationField, final int rotation) {
+        comboSelect(rotationField, (String s) -> s.charAt(0)==rotation+'0');
+    }
+
+    protected static boolean allHaveValues(Component... components) {
+        for (Component comp : components) {
+            if (comp instanceof JComboBox) {
+                if (((JComboBox) comp).getSelectedItem()==null) {
+                    return false;
+                }
+            } else if (comp instanceof JTextField) {
+                if (((JTextField) comp).getText().trim().isEmpty()) {
+                    return false;
+                }
+            } else if (comp instanceof JSpinner) {
+                if (((JSpinner) comp).getValue()==null) {
+                    return false;
+                }
+            } else {
+                throw new IllegalArgumentException("Unexpected component " + comp);
+            }
+        }
+        return true;
+    }
+
 
     private void close(ActionEvent event) {
         this.okPressed = (event.getSource()==okButton);
