@@ -46,6 +46,9 @@ public class StringFieldPropertiesPane extends PropertiesPane {
         panel.add(panelOf("Display string:", stringField));
         panel.add(panelOf("X:", xField, "Y:", yField));
         panel.add(panelOf("Rotation:", rotationField));
+
+        cancelButton.setText("Delete");
+
         return panel;
     }
 
@@ -87,7 +90,6 @@ public class StringFieldPropertiesPane extends PropertiesPane {
 
     public void loadStringField(StringField sf) {
         headlineLabel.setText(sf==null ? "New string field" : "String field properties");
-        cancelButton.setVisible(sf==null);
         if (sf!=null) {
             nameField.setText(sf.getName());
             stringField.setText(sf.getDisplayText());

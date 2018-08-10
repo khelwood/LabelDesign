@@ -163,27 +163,11 @@ public class DesignApp implements Runnable {
         }
         StringFieldPropertiesPane propPane = new StringFieldPropertiesPane(design, renderFactory);
         propPane.loadStringField(null);
-        frame.setPropertiesView(propPane);
         final StringField sf = new StringField();
-        editingField = sf;
         propPane.updateStringField(sf);
         design.getStringFields().add(sf);
         repaintDesign();
-        propPane.setChangeListener(e -> {
-            propPane.updateStringField(sf);
-            repaintDesign();
-        });
-        propPane.setCloseAction(() -> {
-            if (propPane.isOkPressed()) {
-                propPane.updateStringField(sf);
-                repaintDesign();
-            } else {
-                design.getStringFields().remove(sf);
-                repaintDesign();
-            }
-            frame.clearPropertiesView();
-            editingField = null;
-        });
+        installPane(propPane, sf);
     }
 
     public void fieldsDragged() {
@@ -320,6 +304,7 @@ public class DesignApp implements Runnable {
     }
 
     private void editLabel() {
+        editingField = null; // TODO - check this
         DesignPropertiesPane dp = new DesignPropertiesPane();
         dp.loadDesign(getDesign());
         frame.setPropertiesView(dp);
@@ -340,6 +325,45 @@ public class DesignApp implements Runnable {
                 frame.repaintDesign();
                 frame.setTitle(design.getName());
             }
+        });
+    }
+
+    public void openProperties(DesignField field) {
+        if (field==editingField) {
+            return;
+        }
+        if (field instanceof StringField) {
+            openProperties((StringField) field);
+        }
+    }
+
+    private void openProperties(final StringField field) {
+        Design design = getDesign();
+        if (design==null) {
+            return;
+        }
+        StringFieldPropertiesPane propPane = new StringFieldPropertiesPane(design, renderFactory);
+        propPane.loadStringField(field);
+        installPane(propPane, field);
+    }
+
+    private void installPane(StringFieldPropertiesPane propPane, final StringField field) {
+        this.editingField = field;
+        frame.setPropertiesView(propPane);
+        final Design design = getDesign();
+        propPane.setChangeListener(e -> {
+            propPane.updateStringField(field);
+            repaintDesign();
+        });
+        propPane.setCloseAction(() -> {
+            if (propPane.isCancelPressed()) {
+                design.getStringFields().remove(field);
+            } else {
+                propPane.updateStringField(field);
+            }
+            repaintDesign();
+            frame.clearPropertiesView();
+            editingField = null;
         });
     }
 

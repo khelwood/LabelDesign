@@ -1,8 +1,7 @@
 * Field name uniqueness
-* Side pane should list all components when none is selected
+* Trigger properties pane whenever a single item is selected
 * Adding barcodes
 * Importing from pmb json template
-* Support deleting fields
+* Support deleting multiple fields
 * Update properties pane when you delete the field in the design panel
 * Tidy up properties pane when a new properties pane is activated
-

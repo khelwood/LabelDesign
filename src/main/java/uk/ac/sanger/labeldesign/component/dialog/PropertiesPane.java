@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
 
 /**
@@ -22,7 +23,7 @@ public abstract class PropertiesPane extends JPanel {
     private ChangeListener changeListener;
     private boolean changeListening = true;
 
-    private boolean okPressed;
+    private boolean okPressed, cancelPressed;
     private Runnable closeAction;
 
     public PropertiesPane() {
@@ -30,8 +31,8 @@ public abstract class PropertiesPane extends JPanel {
         JPanel buttonPanel = new JPanel();
         okButton = new JButton("OK");
         cancelButton = new JButton("Cancel");
-        okButton.addActionListener(e -> close(true));
-        cancelButton.addActionListener(e -> close(false));
+        okButton.addActionListener(this::close);
+        cancelButton.addActionListener(this::close);
 
         buttonPanel.add(cancelButton);
         buttonPanel.add(okButton);
@@ -101,13 +102,18 @@ public abstract class PropertiesPane extends JPanel {
         return combo;
     }
 
-    private void close(boolean okPressed) {
-        this.okPressed = okPressed;
+    private void close(ActionEvent event) {
+        this.okPressed = (event.getSource()==okButton);
+        this.cancelPressed = (event.getSource()==cancelButton);
         closeAction.run();
     }
 
     public boolean isOkPressed() {
         return this.okPressed;
+    }
+
+    public boolean isCancelPressed() {
+        return this.cancelPressed;
     }
 
     protected abstract boolean valid();

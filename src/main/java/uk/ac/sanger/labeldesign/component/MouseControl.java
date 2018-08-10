@@ -52,6 +52,7 @@ public class MouseControl extends MouseAdapter {
             designPanel.deselect();
             if (field!=null) {
                 designPanel.select(field);
+                app.openProperties(field);
                 allowDragging = true;
             }
         }
@@ -72,6 +73,7 @@ public class MouseControl extends MouseAdapter {
             DesignField field = fieldAt(event);
             if (field!=null) {
                 designPanel.select(field);
+                app.openProperties(field);
             }
         }
     }
