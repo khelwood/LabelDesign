@@ -12,14 +12,20 @@ import javax.swing.*;
 import java.awt.FileDialog;
 import java.io.FilenameFilter;
 import java.nio.file.*;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.function.Consumer;
+import java.util.*;
 
 /**
  * @author dr6
  */
 public class DesignApp implements Runnable {
+    enum MenuGroup {
+        File, Edit;
+
+        public String getMenuName() {
+            return this.name();
+        }
+    }
+
     private static final String DESIGN_EXTENSION = ".lbld";
     private static final String JSON_EXTENSION = ".json";
 
@@ -52,6 +58,10 @@ public class DesignApp implements Runnable {
         frame.getDesignPanel().addMouseControl(new MouseControl(this));
         frame.setBounds(50, 50, 900, 400);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    public Action getAction(OperationEnum operation) {
+        return actions.get(operation);
     }
 
     public Design getDesign() {
@@ -111,61 +121,16 @@ public class DesignApp implements Runnable {
         frame.setDesign(design);
     }
 
-    private enum MenuGroup {
-        File, Edit;
-
-        public String getMenuName() {
-            return this.name();
-        }
-    }
-
-    private enum OperationEnum implements DesignAction.Operation {
-        NEW_DESIGN(MenuGroup.File, "New design", DesignApp::newDesign),
-        LOAD_DESIGN(MenuGroup.File, "Open design", DesignApp::loadDesign),
-        SAVE_DESIGN(MenuGroup.File, "Save design", DesignApp::saveDesign),
-        SAVE_AS(MenuGroup.File, "Save design as", DesignApp::saveDesignAs),
-        EXPORT_JSON(MenuGroup.File, "Export JSON", DesignApp::exportJson),
-
-        SELECT_ALL(MenuGroup.Edit, "Select all", DesignApp::selectAll),
-        SELECT_NONE(MenuGroup.Edit, "Select none", DesignApp::selectNone),
-        ADD_STRING(MenuGroup.Edit, "Add string field", DesignApp::addStringField),
-        ADD_BARCODE(MenuGroup.Edit, "Add barcode", DesignApp::addBarcodeField),
-        EDIT_LABEL(MenuGroup.Edit, "Edit label properties", DesignApp::editLabel),
-        ;
-
-        private final MenuGroup menuGroup;
-        private final String string;
-        private final Consumer<DesignApp> function;
-
-        OperationEnum(MenuGroup menuGroup, String string, Consumer<DesignApp> function) {
-            this.menuGroup = menuGroup;
-            this.string = string;
-            this.function = function;
-        }
-
-        @Override
-        public String getActionName() {
-            return this.string;
-        }
-
-        @Override
-        public void perform(DesignApp app) {
-            this.function.accept(app);
-        }
-
-        public MenuGroup getMenuGroup() {
-            return this.menuGroup;
-        }
-    }
-
     private void createActions() {
         actions = new EnumMap<>(OperationEnum.class);
         for (OperationEnum op : OperationEnum.values()) {
             actions.put(op, new DesignAction(this, op));
         }
+
+        getDesignPanel().addKeyControl(new KeyControl(this));
     }
 
-    private void newDesign() {
+    void newDesign() {
         final DesignPropertiesPane ndop = new DesignPropertiesPane();
         ndop.loadDesign(null);
         ndop.setCloseAction(() -> {
@@ -189,7 +154,7 @@ public class DesignApp implements Runnable {
             menus.put(mg, menu);
             menuBar.add(menu);
         }
-        for (DesignApp.OperationEnum op : DesignApp.OperationEnum.values()) {
+        for (OperationEnum op : OperationEnum.values()) {
             if (op.getMenuGroup()!=null) {
                 menus.get(op.getMenuGroup()).add(actions.get(op));
             }
@@ -201,7 +166,7 @@ public class DesignApp implements Runnable {
         frame.repaintDesign();
     }
 
-    private void addStringField() {
+    void addStringField() {
         Design design = getDesign();
         if (design==null) {
             return;
@@ -225,7 +190,7 @@ public class DesignApp implements Runnable {
         }
     }
 
-    private void saveDesign() {
+    void saveDesign() {
         if (filePath!=null) {
             saveDesign(filePath);
         } else {
@@ -233,7 +198,7 @@ public class DesignApp implements Runnable {
         }
     }
 
-    private void saveDesignAs() {
+    void saveDesignAs() {
         Path path = requestFilePath(filePath, FileDialog.SAVE, DESIGN_EXTENSION);
         if (path==null) {
             return;
@@ -241,7 +206,7 @@ public class DesignApp implements Runnable {
         saveDesign(path);
     }
 
-    private void loadDesign() {
+    void loadDesign() {
         Path path = requestFilePath(null, FileDialog.LOAD, DESIGN_EXTENSION);
         if (path==null) {
             return;
@@ -278,7 +243,7 @@ public class DesignApp implements Runnable {
         }
     }
 
-    private void exportJson() {
+    void exportJson() {
         Design design = getDesign();
         if (design==null) {
             return;
@@ -340,7 +305,7 @@ public class DesignApp implements Runnable {
         return Paths.get(fd.getDirectory(), fd.getFile());
     }
 
-    private void selectAll() {
+    void selectAll() {
         frame.selectAll();
     }
 
@@ -350,7 +315,18 @@ public class DesignApp implements Runnable {
         repaintDesign();
     }
 
-    private void editLabel() {
+    public void deleteSelected() {
+        Set<DesignField> toDelete = getDesignSelection().getSelected();
+        if (toDelete.isEmpty()) {
+            return;
+        }
+        Design design = getDesign();
+        design.getBarcodeFields().removeIf(toDelete::contains);
+        design.getStringFields().removeIf(toDelete::contains);
+        selectNone();
+    }
+
+    void editLabel() {
         closeProperties();
         DesignPropertiesPane dp = new DesignPropertiesPane();
         dp.loadDesign(getDesign());
@@ -431,7 +407,7 @@ public class DesignApp implements Runnable {
         });
     }
 
-    private void addBarcodeField() {
+    void addBarcodeField() {
         final Design design = getDesign();
         if (design==null) {
             return;

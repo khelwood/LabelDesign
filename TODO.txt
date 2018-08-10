@@ -1,9 +1,7 @@
 * Importing from pmb json template
-* Support deleting multiple fields
-* Update properties pane when you delete the field in the design panel
 * Tidy up properties pane when a new properties pane is activated
-* Deactivate prop pane when a field is deselected
 * Barcode rotation
 
 * Field name uniqueness?
 * Barcode types?
+* Undo/redo

@@ -4,7 +4,6 @@ import uk.ac.sanger.labeldesign.DesignApp;
 import uk.ac.sanger.labeldesign.model.Design;
 import uk.ac.sanger.labeldesign.model.DesignField;
 
-import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -12,9 +11,8 @@ import java.awt.event.MouseEvent;
  * @author dr6
  */
 public class MouseControl extends MouseAdapter {
-    private static final int C_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
     private static boolean isEditEvent(MouseEvent event) {
-        return (event.getModifiers() & C_MASK)!=0;
+        return (event.getModifiers() & KeyControl.C_MASK)!=0;
     }
 
     private DesignApp app;

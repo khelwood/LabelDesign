@@ -28,6 +28,10 @@ public class DesignPanel extends JPanel {
         addMouseMotionListener(mouseControl);
     }
 
+    public void addKeyControl(KeyControl keyControl) {
+        keyControl.register(this);
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
