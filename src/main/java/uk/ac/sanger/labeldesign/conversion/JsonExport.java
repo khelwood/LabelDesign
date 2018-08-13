@@ -10,8 +10,8 @@ import javax.json.*;
 public class JsonExport extends JsonOutput {
     public JsonValue toJson(StringField sf) {
         return getBuilderFactory().createObjectBuilder()
-                .add("horizontal_magnification", to2s(sf.getMagnification()))
-                .add("vertical_magnification", to2s(sf.getMagnification()))
+                .add("horizontal_magnification", to2s(sf.getHorizontalMagnification()))
+                .add("vertical_magnification", to2s(sf.getVerticalMagnification()))
                 .add("font", String.valueOf(sf.getFontCode()))
                 .add("space_adjustment", to2s(sf.getSpacing()))
                 .add("rotational_angles", rep2(sf.getRotation()))
@@ -30,7 +30,7 @@ public class JsonExport extends JsonOutput {
                 .add("field_name", bf.getName());
 
         if (bf.getBarcodeType()=='5') {
-            builder.add("type_of_check_digit", "2");
+            builder.add("type_of_check_digit", String.valueOf(bf.getCheckDigitType()));
             builder.add("one_module_width", to2s(bf.getCellWidth()));
             builder.add("height", to2s(bf.getHeight()));
         } else {

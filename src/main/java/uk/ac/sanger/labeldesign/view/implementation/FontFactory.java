@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Dispenses fonts sized to be consistent with the on-screen label size and fonts with "05" magnification.
  * @author dr6
  */
 public class FontFactory {

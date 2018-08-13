@@ -1,5 +1,6 @@
-* Importing from pmb json template
-
 * Executable jar
+
+* Alter barcode properties pane based on selected type
 * Field name uniqueness?
 * Undo/redo?
+* Find a nice way to split up DesignApp

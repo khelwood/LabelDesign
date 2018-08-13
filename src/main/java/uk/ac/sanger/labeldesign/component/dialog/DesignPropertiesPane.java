@@ -20,7 +20,6 @@ public class DesignPropertiesPane extends PropertiesPane {
         boundaryFields = new JSpinner[4];
         for (int i = 0; i < boundaryFields.length; ++i) {
             boundaryFields[i] = makeSpinner(1000, null, null, 10);
-            boundaryFields[i].setPreferredSize(boundaryFields[i].getPreferredSize());
         }
         labelTypeField = makeSpinner(1, 1, null, 1);
 

@@ -40,7 +40,8 @@ public class Draw implements AutoCloseable {
         ((Graphics2D) graphics).setStroke(stroke);
     }
 
-    public Rectangle string(int x, int y, String string, Color colour, Font font, int spacing) {
+    public Rectangle string(int x, int y, String string, Color colour, Font font, int spacing,
+                            int xScale, int yScale) {
         if (string.isEmpty()) {
             return new Rectangle(x,y,0,0);
         }
@@ -50,13 +51,24 @@ public class Draw implements AutoCloseable {
         FontMetrics fontMetrics = graphics.getFontMetrics();
         for (int i = 0; i < string.length(); ++i) {
             char ch = string.charAt(i);
-            int wid = fontMetrics.charWidth(ch);
-            graphics.drawString(String.valueOf(ch), x1, y);
+            int wid = fontMetrics.charWidth(ch) * xScale;
+            scaleString(graphics, String.valueOf(ch), x1, y, xScale, yScale);
             x1 += wid + spacing;
         }
-        int y0 = y - fontMetrics.getMaxAscent();
-        int y1 = y + fontMetrics.getMaxDescent();
+        int y0 = y - fontMetrics.getMaxAscent()*yScale;
+        int y1 = y + fontMetrics.getMaxDescent()*yScale;
         return new Rectangle(x, y0, x1-x-spacing, y1-y0);
+    }
+
+    private void scaleString(Graphics g, String string, int x, int y, int xScale, int yScale) {
+        if (xScale<=1 && yScale<=1) {
+            g.drawString(string, x, y);
+        }
+        Graphics2D g2 = (Graphics2D) (g.create());
+        g2.translate(x, y);
+        g2.scale(xScale, yScale);
+        g2.drawString(string, 0, 0);
+        g2.dispose();
     }
 
     public Draw create() {

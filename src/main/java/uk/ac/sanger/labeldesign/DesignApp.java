@@ -14,6 +14,8 @@ import java.io.FilenameFilter;
 import java.nio.file.*;
 import java.util.*;
 
+import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
+
 /**
  * @author dr6
  */
@@ -227,7 +229,44 @@ public class DesignApp implements Runnable {
         if (design!=null) {
             setDesign(design);
             this.filePath = path;
+            editLabel();
         }
+    }
+
+    void importJson() {
+        Path path = requestFilePath(null, FileDialog.LOAD, JSON_EXTENSION);
+        if (path==null) {
+            return;
+        }
+        JsonImport jin = new JsonImport();
+        Design design = load(path, jin);
+        if (design!=null) {
+            setDesign(design);
+            getDesignPanel().adjustDesignBounds();
+            repaintDesign();
+            Collection<String> warnings = jin.getWarnings();
+            String message = "The label bounds are not part of the JSON import.";
+            if (!warnings.isEmpty()) {
+                message = assembleMessage("The JSON was imported with the following warnings:",
+                        warnings, message);
+            }
+            JOptionPane.showMessageDialog(frame, message, "Imported", JOptionPane.INFORMATION_MESSAGE);
+            editLabel();
+        }
+    }
+
+    private static String assembleMessage(String before, Collection<String> items, String after) {
+        StringBuilder sb = new StringBuilder("<html>");
+        sb.append(escapeHtml4(before));
+        sb.append("<ul>");
+        for (String item : items) {
+            sb.append("<li>");
+            sb.append(escapeHtml4(item));
+        }
+        sb.append("</ul>");
+        sb.append(escapeHtml4(after));
+        sb.append("</html>");
+        return sb.toString();
     }
 
     private Design load(Path path, JsonInput reader) {
@@ -236,8 +275,7 @@ public class DesignApp implements Runnable {
             return reader.toDesign(value);
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(frame, "An error occurred trying to read the file.",
-                    "File error", JOptionPane.ERROR_MESSAGE);
+            showError("File error", "An error occurred trying to read the file.", e);
             return null;
         }
     }
@@ -248,10 +286,16 @@ public class DesignApp implements Runnable {
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(frame, "An error occurred trying to write the file.",
-                    "File error", JOptionPane.ERROR_MESSAGE);
+            showError("File error", "An error occurred trying to write the file.", e);
             return false;
         }
+    }
+
+    private void showError(String title, String message, Exception exception) {
+        if (exception!=null) {
+            message = String.format("<html>%s<br>%s</html>", message, escapeHtml4(exception.getMessage()));
+        }
+        JOptionPane.showMessageDialog(frame, message, title, JOptionPane.ERROR_MESSAGE);
     }
 
     void exportJson() {

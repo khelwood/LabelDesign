@@ -39,7 +39,7 @@ public abstract class JsonInput {
     protected JsonValue valueFrom(JsonObject jo, String key) throws IOException {
         JsonValue value = jo.get(key);
         if (value==null) {
-            throw exception("Missing key "+key);
+            throw exception("Missing key \""+key+"\"");
         }
         return value;
     }

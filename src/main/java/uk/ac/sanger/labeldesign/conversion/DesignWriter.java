@@ -15,6 +15,7 @@ public class DesignWriter extends JsonOutput {
                 .add("font", String.valueOf(sf.getFontCode()))
                 .add("spacing", sf.getSpacing())
                 .add("rotation", sf.getRotation())
+                .add("magnification", position(sf.getHorizontalMagnification(), sf.getVerticalMagnification()))
                 .add("position", position(sf))
                 .build();
     }

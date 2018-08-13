@@ -18,6 +18,7 @@ public class DesignPanel extends JPanel {
     private Map<DesignField, Rectangle> fieldBounds = Collections.emptyMap();
     private DesignSelection selection = new DesignSelection();
     private int x0, y0;
+    private boolean settingBounds;
 
     public DesignPanel(RenderFactory renderFactory) {
         this.renderFactory = renderFactory;
@@ -42,8 +43,8 @@ public class DesignPanel extends JPanel {
             int hi = design.getHeight();
             int gw = getWidth();
             int gh = getHeight();
-            x0 = (gw-wi) / 2 - design.getXMin();
-            y0 = (gh-hi) / 2 - design.getYMin();
+            x0 = (gw - wi) / 2 - design.getXMin();
+            y0 = (gh - hi) / 2 - design.getYMin();
             g.translate(x0, y0);
             try (Draw draw = new Draw(g)) {
                 renderFactory.getDesignRender().render(draw, design);
@@ -62,7 +63,38 @@ public class DesignPanel extends JPanel {
             }
 
             selection.draw(g, fieldBounds);
+
+            if (this.settingBounds) {
+                if (fieldBounds.isEmpty()) {
+                    design.setBounds(0, 0, 100, 100);
+                } else {
+                    Rectangle bounds = boundsUnion(fieldBounds.values());
+                    int margin = 20;
+                    design.setBounds(bounds.x- margin, bounds.y- margin,
+                            bounds.x+bounds.width+ margin, bounds.y + bounds.height+ margin);
+                }
+                repaint();
+            }
         }
+        this.settingBounds = false;
+    }
+
+    private static Rectangle boundsUnion(Collection<? extends Rectangle> rects) {
+        int x0 = 0, y0 = 0, x1 = -1, y1 = -1;
+        for (Rectangle rect : rects) {
+            if (x1<x0) {
+                x0 = rect.x;
+                y0 = rect.y;
+                x1 = x0 + rect.width;
+                y1 = y0 + rect.height;
+            } else {
+                x0 = Math.min(x0, rect.x);
+                y0 = Math.min(y0, rect.y);
+                x1 = Math.max(x1, rect.x + rect.width);
+                y1 = Math.max(y1, rect.y + rect.height);
+            }
+        }
+        return new Rectangle(x0, y0, x1-x0, y1-y0);
     }
 
     public void setSelectionRect(int x0, int y0, int x1, int y1) {
@@ -82,6 +114,11 @@ public class DesignPanel extends JPanel {
 
         selection.setRect(new Rectangle(Math.min(x0, x1), Math.min(y0, y1),
                 Math.abs(x1-x0), Math.abs(y1-y0)), inRect);
+        repaint();
+    }
+
+    public void adjustDesignBounds() {
+        this.settingBounds = true;
         repaint();
     }
 

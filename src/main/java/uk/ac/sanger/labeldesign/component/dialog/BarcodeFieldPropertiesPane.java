@@ -16,6 +16,7 @@ public class BarcodeFieldPropertiesPane extends PropertiesPane {
     private JSpinner xField, yField;
     private JSpinner cellWidthField;
     private JSpinner heightField;
+    private JSpinner checkDigitField;
     private JComboBox<String> typeCodeField;
     private JComboBox<String> rotationField;
     private JLabel headlineLabel;
@@ -26,23 +27,31 @@ public class BarcodeFieldPropertiesPane extends PropertiesPane {
         yField = makeSpinner((design.getYMin()+design.getYMax())/2, null, null, 10);
         cellWidthField = makeSpinner(1, 1, null, 1);
         heightField = makeSpinner(1, 0, null, 1);
+        checkDigitField = makeSpinner(2, 0, 2, 1);
         typeCodeField = new JComboBox<>();
         typeCodeField.addItem("Q: Data Matrix");
         typeCodeField.addItem("5: EAN13");
         typeCodeField.addItemListener(getFieldItemListener());
         rotationField = makeRotationCombo();
 
-        add(layOutComponents(), BorderLayout.CENTER);
+        add(setupComponents(), BorderLayout.CENTER);
         updateState();
+    }
+
+    private JPanel setupComponents() {
+        headlineLabel = new JLabel();
+        headlineLabel.setFont(headlineLabel.getFont().deriveFont(headlineLabel.getFont().getSize()*1.3f));
+        cancelButton.setText("Delete");
+        return layOutComponents();
     }
 
     private JPanel layOutComponents() {
         JPanel panel = new JPanel();
+
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        headlineLabel = new JLabel();
-        headlineLabel.setFont(headlineLabel.getFont().deriveFont(headlineLabel.getFont().getSize()*1.3f));
         panel.add(panelOf(headlineLabel));
         panel.add(panelOf("Type code:", typeCodeField));
+        panel.add(panelOf("Check digit type (1D barcode):", checkDigitField));
         panel.add(panelOf("Name:", nameField));
         panel.add(panelOf("Barcode sizes are estimates."));
         panel.add(panelOf("Cell width/module width:", cellWidthField));
@@ -50,9 +59,6 @@ public class BarcodeFieldPropertiesPane extends PropertiesPane {
         panel.add(panelOf("X:", xField, "Y:", yField));
         panel.add(panelOf("PMB ignores the rotation field for 1D barcodes."));
         panel.add(panelOf("Rotation:", rotationField));
-
-
-        cancelButton.setText("Delete");
 
         return panel;
     }
@@ -67,6 +73,7 @@ public class BarcodeFieldPropertiesPane extends PropertiesPane {
             setSelectedRotation(rotationField, bf.getRotation());
             heightField.setValue(bf.getHeight());
             cellWidthField.setValue(bf.getCellWidth());
+            checkDigitField.setValue(bf.getCheckDigitType());
         }
     }
 
@@ -83,11 +90,12 @@ public class BarcodeFieldPropertiesPane extends PropertiesPane {
         if (rotation!=null) {
             bf.setRotation(rotation);
         }
+        bf.setCheckDigitType((int) checkDigitField.getValue());
     }
 
     @Override
     protected boolean valid() {
-        return allHaveValues(nameField, typeCodeField, xField, yField, rotationField, cellWidthField, heightField);
+        return allHaveValues(nameField, typeCodeField, xField, yField, rotationField, cellWidthField, heightField, checkDigitField);
     }
 
     @Override

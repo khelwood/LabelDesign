@@ -25,6 +25,9 @@ public class DesignReader extends JsonInput {
         sf.setSpacing(intFrom(jo, "spacing"));
         sf.setRotation(intFrom(jo, "rotation"));
         int[] position = pointFrom(jo, "position");
+        int[] magnification = pointFrom(jo, "magnification");
+        sf.setHorizontalMagnification(magnification[0]);
+        sf.setVerticalMagnification(magnification[1]);
         sf.setPosition(position[0], position[1]);
         return sf;
     }

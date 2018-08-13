@@ -7,6 +7,7 @@ public class BarcodeField extends DesignField {
     private char barcodeType;
     private int height;
     private int cellWidth;
+    private int checkDigitType;
 
     public char getBarcodeType() {
         return this.barcodeType;
@@ -30,5 +31,13 @@ public class BarcodeField extends DesignField {
 
     public void setCellWidth(int cellWidth) {
         this.cellWidth = cellWidth;
+    }
+
+    public int getCheckDigitType() {
+        return this.checkDigitType;
+    }
+
+    public void setCheckDigitType(int checkDigitType) {
+        this.checkDigitType = checkDigitType;
     }
 }

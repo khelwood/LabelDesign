@@ -16,6 +16,7 @@ public class StringFieldPropertiesPane extends PropertiesPane {
     private JSpinner spacingField;
     private JComboBox<String> fontCodeField;
     private JComboBox<String> rotationField;
+    private JSpinner horizontalMagnificationField, verticalMagnificationField;
     private JLabel headlineLabel;
 
     public StringFieldPropertiesPane(Design design, RenderFactory renderFactory) {
@@ -25,6 +26,10 @@ public class StringFieldPropertiesPane extends PropertiesPane {
         stringField.selectAll();
         xField = makeSpinner((design.getXMin()+design.getXMax())/2, null, null, 10);
         yField = makeSpinner((design.getYMin()+design.getYMax())/2, null, null, 10);
+
+        horizontalMagnificationField = makeSpinner(5, 5, 95, 5);
+        verticalMagnificationField = makeSpinner(5, 5, 95, 5);
+
         spacingField = makeSpinner(0, 0, null, 1);
         fontCodeField = makeFontCodeCombo(renderFactory);
         rotationField = makeRotationCombo();
@@ -44,7 +49,9 @@ public class StringFieldPropertiesPane extends PropertiesPane {
         panel.add(panelOf("Name:", nameField));
         panel.add(panelOf("Spacing adjustment:", spacingField));
         panel.add(panelOf("Display string:", stringField));
-        panel.add(panelOf("X:", xField, "Y:", yField));
+        panel.add(panelOf("Magnification: X:", horizontalMagnificationField,
+                "Y:", verticalMagnificationField));
+        panel.add(panelOf("Position: X:", xField, "Y:", yField));
         panel.add(panelOf("Rotation:", rotationField));
 
         cancelButton.setText("Delete");
@@ -68,6 +75,8 @@ public class StringFieldPropertiesPane extends PropertiesPane {
             xField.setValue(sf.getX());
             yField.setValue(sf.getY());
             spacingField.setValue(sf.getSpacing());
+            horizontalMagnificationField.setValue(sf.getHorizontalMagnification());
+            verticalMagnificationField.setValue(sf.getVerticalMagnification());
             setSelectedRotation(rotationField, sf.getRotation());
             setSelectedFont(sf.getFontCode());
         }
@@ -85,6 +94,10 @@ public class StringFieldPropertiesPane extends PropertiesPane {
         if (rotation!=null) {
             sf.setRotation(rotation);
         }
+        Integer horMag = (Integer) horizontalMagnificationField.getValue();
+        Integer verMag = (Integer) verticalMagnificationField.getValue();
+        sf.setHorizontalMagnification(horMag);
+        sf.setVerticalMagnification(verMag);
         sf.setSpacing((Integer) spacingField.getValue());
     }
 

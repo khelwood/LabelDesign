@@ -13,6 +13,7 @@ public enum OperationEnum implements DesignAction.Operation {
     LOAD_DESIGN(MenuGroup.File, "Open design", DesignApp::loadDesign),
     SAVE_DESIGN(MenuGroup.File, "Save design", DesignApp::saveDesign, 1),
     SAVE_AS(MenuGroup.File, "Save design as", DesignApp::saveDesignAs, 1),
+    IMPORT_JSON(MenuGroup.File, "Import JSON", DesignApp::importJson, 2),
     EXPORT_JSON(MenuGroup.File, "Export JSON", DesignApp::exportJson, 2),
 
     SELECT_ALL(MenuGroup.Edit, "Select all", DesignApp::selectAll),
