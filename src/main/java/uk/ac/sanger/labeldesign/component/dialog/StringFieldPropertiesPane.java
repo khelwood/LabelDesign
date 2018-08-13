@@ -37,8 +37,9 @@ public class StringFieldPropertiesPane extends PropertiesPane {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         headlineLabel = new JLabel();
+        headlineLabel.setFont(headlineLabel.getFont().deriveFont(headlineLabel.getFont().getSize()*1.3f));
         panel.add(panelOf(headlineLabel));
-        panel.add(panelOf("All fonts are substitutes or approximations."));
+        panel.add(panelOf("All fonts displayed are substitutes or approximations."));
         panel.add(panelOf("Font code:", fontCodeField));
         panel.add(panelOf("Name:", nameField));
         panel.add(panelOf("Spacing adjustment:", spacingField));

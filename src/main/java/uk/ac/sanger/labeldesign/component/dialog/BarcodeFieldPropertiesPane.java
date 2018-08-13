@@ -25,10 +25,11 @@ public class BarcodeFieldPropertiesPane extends PropertiesPane {
         xField = makeSpinner((design.getXMin()+design.getXMax())/2, null, null, 10);
         yField = makeSpinner((design.getYMin()+design.getYMax())/2, null, null, 10);
         cellWidthField = makeSpinner(1, 1, null, 1);
-        heightField = makeSpinner(1, 1, null, 1);
+        heightField = makeSpinner(1, 0, null, 1);
         typeCodeField = new JComboBox<>();
         typeCodeField.addItem("Q: Data Matrix");
         typeCodeField.addItem("5: EAN13");
+        typeCodeField.addItemListener(getFieldItemListener());
         rotationField = makeRotationCombo();
 
         add(layOutComponents(), BorderLayout.CENTER);
@@ -39,14 +40,17 @@ public class BarcodeFieldPropertiesPane extends PropertiesPane {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         headlineLabel = new JLabel();
+        headlineLabel.setFont(headlineLabel.getFont().deriveFont(headlineLabel.getFont().getSize()*1.3f));
         panel.add(panelOf(headlineLabel));
         panel.add(panelOf("Type code:", typeCodeField));
         panel.add(panelOf("Name:", nameField));
         panel.add(panelOf("Barcode sizes are estimates."));
-        panel.add(panelOf("Cell width:", cellWidthField));
-        panel.add(panelOf("Height:", heightField));
+        panel.add(panelOf("Cell width/module width:", cellWidthField));
+        panel.add(panelOf("Height (1D barcode):", heightField));
         panel.add(panelOf("X:", xField, "Y:", yField));
+        panel.add(panelOf("PMB ignores the rotation field for 1D barcodes."));
         panel.add(panelOf("Rotation:", rotationField));
+
 
         cancelButton.setText("Delete");
 

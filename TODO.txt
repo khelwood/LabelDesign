@@ -1,10 +1,5 @@
 * Importing from pmb json template
-* Rendering or removing EAN13 support
-width: 12mm * module width
-height: height
-position from: top left
-does not rotate...?
 
+* Executable jar
 * Field name uniqueness?
-* Barcode types?
-* Undo/redo
+* Undo/redo?

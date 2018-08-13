@@ -89,6 +89,10 @@ public abstract class PropertiesPane extends JPanel {
 
     protected JSpinner makeSpinner(SpinnerModel model) {
         JSpinner spinner = new JSpinner(model);
+        JComponent editor = spinner.getEditor();
+        if (editor instanceof JSpinner.DefaultEditor) {
+            ((JSpinner.DefaultEditor) editor).getTextField().setColumns(3);
+        }
         spinner.addChangeListener(getFieldChangeListener());
         return spinner;
     }

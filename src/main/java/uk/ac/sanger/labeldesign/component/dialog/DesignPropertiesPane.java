@@ -36,6 +36,7 @@ public class DesignPropertiesPane extends PropertiesPane {
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
         headlineLabel = new JLabel("New design");
+        headlineLabel.setFont(headlineLabel.getFont().deriveFont(headlineLabel.getFont().getSize()*1.3f));
         p.add(panelOf(headlineLabel));
         p.add(panelOf("Name:", nameField));
         p.add(panelOf("X min:", boundaryFields[0], "X max:", boundaryFields[1]));

@@ -56,7 +56,7 @@ public class DesignApp implements Runnable {
     private void createFrame() {
         frame = new DesignFrame(renderFactory);
         frame.getDesignPanel().addMouseControl(new MouseControl(this));
-        frame.setBounds(50, 50, 900, 400);
+        frame.setBounds(50, 50, 950, 400);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
