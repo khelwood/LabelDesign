@@ -1,4 +1,2 @@
-* Executable jar
-
 * Undo/redo?
 * Find a nice way to split up DesignApp class

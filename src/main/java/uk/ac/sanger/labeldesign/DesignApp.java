@@ -46,13 +46,11 @@ public class DesignApp implements Runnable {
 
         frame.setVisible(true);
 
-        try {
-            Design design = new DesignReader().readDesign(Paths.get(System.getProperty("user.home"),
-                    "Desktop", "untitled"+DESIGN_EXTENSION));
-            frame.setDesign(design);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Design design = new Design();
+        design.setBounds(0, 0, 500, 300);
+        design.setName("New label");
+        frame.setDesign(design);
+        editLabel();
     }
 
     private void createFrame() {
