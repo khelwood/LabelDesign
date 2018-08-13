@@ -179,15 +179,9 @@ public class JsonImport extends JsonInput {
         JsonObject jo = value.asJsonObject();
         Set<String> otherKeys = new HashSet<>(jo.keySet());
         BarcodeField bf = new BarcodeField();
-        bf.setBarcodeType(charFrom(jo, "barcode_type"));
+        bf.setTypeCode(charFrom(jo, "barcode_type"));
         otherKeys.remove("barcode_type");
-        boolean twod;
-        switch (bf.getBarcodeType()) {
-            case 'Q': twod = true; break;
-            case '5': twod = false; break;
-            default: throw exception("This application only supports barcodes of type 5 (EAN13) and Q (data matrix). " +
-                    "Found "+stringFrom(jo, "barcode_type"));
-        }
+        boolean twod = bf.is2D();
         bf.setRotation(rotationFrom(jo, twod));
         otherKeys.remove("rotational_angle");
         bf.setPosition(intFrom(jo, "x_origin"), intFrom(jo, "y_origin"));
@@ -200,14 +194,14 @@ public class JsonImport extends JsonInput {
             otherKeys.remove("one_cell_width");
         } else {
             bf.setHeight(intFrom(jo, "height"));
-            bf.setCellWidth(intFrom(jo, "one_module_width"));
+            bf.setModuleWidth(intFrom(jo, "one_module_width"));
             bf.setCheckDigitType(intFrom(jo, "type_of_check_digit"));
             otherKeys.remove("height");
             otherKeys.remove("one_module_width");
             otherKeys.remove("type_of_check_digit");
         }
         if (!otherKeys.isEmpty()) {
-            warnings.add("Ignoring extra fields for barcode of type "+bf.getBarcodeType()+": "+otherKeys);
+            warnings.add("Ignoring extra fields for barcode of type "+bf.getTypeCode()+": "+otherKeys);
         }
         return bf;
     }

@@ -23,15 +23,15 @@ public class JsonExport extends JsonOutput {
 
     public JsonValue toJson(BarcodeField bf) {
         JsonObjectBuilder builder =  getBuilderFactory().createObjectBuilder()
-                .add("barcode_type", String.valueOf(bf.getBarcodeType()))
+                .add("barcode_type", String.valueOf(bf.getTypeCode()))
                 .add("rotational_angle", String.valueOf(bf.getRotation()))
                 .add("x_origin", to4s(bf.getX()))
                 .add("y_origin", to4s(bf.getY()))
                 .add("field_name", bf.getName());
 
-        if (bf.getBarcodeType()=='5') {
+        if (bf.is1D()) {
             builder.add("type_of_check_digit", String.valueOf(bf.getCheckDigitType()));
-            builder.add("one_module_width", to2s(bf.getCellWidth()));
+            builder.add("one_module_width", to2s(bf.getModuleWidth()));
             builder.add("height", to2s(bf.getHeight()));
         } else {
             builder.add("one_cell_width", to2s(bf.getCellWidth()));

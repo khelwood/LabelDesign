@@ -39,8 +39,14 @@ public class DesignReader extends JsonInput {
         JsonObject jo = (JsonObject) jsonValue;
         BarcodeField bf = new BarcodeField();
         bf.setName(stringFrom(jo, "name"));
-        bf.setBarcodeType(charFrom(jo, "type"));
-        bf.setCellWidth(intFrom(jo, "cellwidth"));
+        bf.setTypeCode(charFrom(jo, "type"));
+        if (bf.is2D()) {
+            bf.setCellWidth(intFrom(jo, "cellWidth"));
+        } else {
+            bf.setHeight(intFrom(jo, "height"));
+            bf.setModuleWidth(intFrom(jo, "moduleWidth"));
+            bf.setCheckDigitType(intFrom(jo, "checkDigitType"));
+        }
         bf.setRotation(intFrom(jo, "rotation"));
         int[] position = pointFrom(jo, "position");
         bf.setPosition(position[0], position[1]);

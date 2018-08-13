@@ -17,7 +17,7 @@ public class BarcodeRender implements Render<BarcodeField> {
             draw.rotate(bf.getX(), bf.getY(), bf.getRotation()*Math.PI/2);
         }
         Rectangle rect;
-        if (bf.getBarcodeType()=='Q') {
+        if (bf.is2D()) {
             rect = render2D(draw, bf);
         } else {
             rect = render1D(draw, bf);
@@ -41,7 +41,7 @@ public class BarcodeRender implements Render<BarcodeField> {
         return rect;
     }
     private Rectangle render1D(Draw draw, BarcodeField bf) {
-        int moduleWidth = bf.getCellWidth()*10;
+        int moduleWidth = bf.getModuleWidth()*10;
         int width = moduleWidth*12;
         int height = bf.getHeight();
         Rectangle rect = new Rectangle(bf.getX(), bf.getY(), width, height);

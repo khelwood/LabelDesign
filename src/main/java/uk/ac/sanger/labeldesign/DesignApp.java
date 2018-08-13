@@ -304,6 +304,9 @@ public class DesignApp implements Runnable {
             return;
         }
         Path path = requestFilePath(null, FileDialog.SAVE, JSON_EXTENSION);
+        if (path==null) {
+            return;
+        }
         JsonExport jx = new JsonExport();
         JsonValue designJson = jx.toJson(design);
         write(designJson, path, jx);
@@ -437,7 +440,7 @@ public class DesignApp implements Runnable {
         if (design==null) {
             return;
         }
-        BarcodeFieldPropertiesPane propPane = new BarcodeFieldPropertiesPane(design, renderFactory);
+        BarcodeFieldPropertiesPane propPane = new BarcodeFieldPropertiesPane(design);
         propPane.loadBarcodeField(field);
         installPane(propPane, field);
     }
@@ -469,7 +472,7 @@ public class DesignApp implements Runnable {
         }
         final BarcodeField bf = new BarcodeField();
         design.getBarcodeFields().add(bf);
-        BarcodeFieldPropertiesPane propPane = new BarcodeFieldPropertiesPane(design, renderFactory);
+        BarcodeFieldPropertiesPane propPane = new BarcodeFieldPropertiesPane(design);
         propPane.loadBarcodeField(null);
         propPane.updateBarcodeField(bf);
         repaintDesign();

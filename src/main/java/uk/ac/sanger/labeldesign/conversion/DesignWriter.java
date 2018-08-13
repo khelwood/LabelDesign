@@ -21,14 +21,21 @@ public class DesignWriter extends JsonOutput {
     }
 
     public JsonValue toJson(BarcodeField bf) {
-        return getBuilderFactory().createObjectBuilder()
+        JsonObjectBuilder builder =  getBuilderFactory().createObjectBuilder()
                 .add("name", bf.getName())
-                .add("type", String.valueOf(bf.getBarcodeType()))
-                .add("cellwidth", bf.getCellWidth())
-                .add("height", bf.getHeight())
+                .add("type", String.valueOf(bf.getTypeCode()))
                 .add("rotation", bf.getRotation())
-                .add("position", position(bf))
-                .build();
+                .add("position", position(bf));
+
+        if (bf.is2D()) {
+            builder.add("cellWidth", bf.getCellWidth());
+        } else {
+            builder.add("height", bf.getHeight());
+            builder.add("moduleWidth", bf.getModuleWidth());
+            builder.add("checkDigitType", bf.getCheckDigitType());
+        }
+
+        return builder.build();
     }
 
     private JsonArray position(DesignField sf) {
