@@ -42,6 +42,9 @@
                         <manifest>
                             <mainClass>uk.ac.sanger.labeldesign.Main</mainClass>
                         </manifest>
+                        <manifestEntries>
+                            <Permissions>all-permissions</Permissions>
+                        </manifestEntries>
                     </archive>
                 </configuration>
                 <executions>
