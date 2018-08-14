@@ -77,7 +77,14 @@ public abstract class PropertiesPane extends JPanel {
     }
 
     protected JTextField makeTextField() {
+        return makeTextField(null);
+    }
+
+    protected JTextField makeTextField(String string) {
         JTextField tf = new JTextField(12);
+        if (string!=null) {
+            tf.setText(string);
+        }
         tf.getDocument().addDocumentListener(getFieldDocListener());
         return tf;
     }

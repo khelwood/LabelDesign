@@ -182,13 +182,12 @@ public class DesignApp implements Runnable {
         if (design==null) {
             return;
         }
-        StringFieldPropertiesPane propPane = new StringFieldPropertiesPane(design, renderFactory);
-        propPane.loadStringField(null);
         final StringField sf = new StringField();
-        propPane.updateStringField(sf);
+        sf.setName("Text");
+        sf.setPosition((design.getXMin()+design.getXMax())/2, (design.getYMin()+design.getYMax())/2);
         design.getStringFields().add(sf);
-        repaintDesign();
-        installPane(propPane, sf);
+        getDesignSelection().clear();
+        select(sf); // should open properties
     }
 
     public void drag(int dx, int dy) {
@@ -469,12 +468,17 @@ public class DesignApp implements Runnable {
             return;
         }
         final BarcodeField bf = new BarcodeField();
+        centralise(bf);
         design.getBarcodeFields().add(bf);
-        BarcodeFieldPropertiesPane propPane = new BarcodeFieldPropertiesPane(design);
-        propPane.loadBarcodeField(null);
-        propPane.updateBarcodeField(bf);
-        repaintDesign();
-        installPane(propPane, bf);
+        getDesignSelection().clear();
+        select(bf); // should open properties
+    }
+
+    private void centralise(DesignField field) {
+        Design design = getDesign();
+        int xc = (design.getXMin()+design.getXMax())/2;
+        int yc = (design.getYMin()+design.getYMax())/2;
+        field.setPosition(xc, yc);
     }
 
     private void installPane(BarcodeFieldPropertiesPane propPane, final BarcodeField field) {

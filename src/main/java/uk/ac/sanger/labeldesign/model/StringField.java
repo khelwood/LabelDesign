@@ -5,7 +5,7 @@ package uk.ac.sanger.labeldesign.model;
  */
 public class StringField extends DesignField {
     private char fontCode = 'A';
-    private String displayText = "Some text here";
+    private String displayText = "Placeholder text";
     private int spacing = 0;
     private int horizontalMagnification = 5;
     private int verticalMagnification = 5;

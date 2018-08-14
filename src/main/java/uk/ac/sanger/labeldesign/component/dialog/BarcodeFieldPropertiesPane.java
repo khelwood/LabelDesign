@@ -27,12 +27,12 @@ public class BarcodeFieldPropertiesPane extends PropertiesPane {
     private List<Component> componentsFor2D;
 
     public BarcodeFieldPropertiesPane(Design design) {
-        nameField = makeTextField();
+        nameField = makeTextField("barcode");
         xField = makeSpinner((design.getXMin()+design.getXMax())/2, null, null, 10);
         yField = makeSpinner((design.getYMin()+design.getYMax())/2, null, null, 10);
-        cellWidthField = makeSpinner(1, 1, null, 1);
+        cellWidthField = makeSpinner(4, 1, null, 1);
         moduleWidthField = makeSpinner(1, 1, null, 1);
-        heightField = makeSpinner(1, 0, null, 1);
+        heightField = makeSpinner(70, 0, null, 1);
         checkDigitField = makeSpinner(2, 0, 2, 1);
         typeCodeField = new JComboBox<>();
         Arrays.stream(Type.values()).forEach(typeCodeField::addItem);

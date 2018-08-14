@@ -20,9 +20,8 @@ public class StringFieldPropertiesPane extends PropertiesPane {
     private JLabel headlineLabel;
 
     public StringFieldPropertiesPane(Design design, RenderFactory renderFactory) {
-        nameField = makeTextField();
-        stringField = makeTextField();
-        stringField.setText("Placeholder string");
+        nameField = makeTextField("text");
+        stringField = makeTextField("Placeholder string");
         stringField.selectAll();
         xField = makeSpinner((design.getXMin()+design.getXMax())/2, null, null, 10);
         yField = makeSpinner((design.getYMin()+design.getYMax())/2, null, null, 10);
