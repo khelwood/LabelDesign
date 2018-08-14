@@ -55,6 +55,7 @@ public class MouseControl extends MouseAdapter {
         lastX = event.getX();
         lastY = event.getY();
         inSpace = (field==null);
+        app.getDesignPanel().requestFocusInWindow();
     }
 
     @Override

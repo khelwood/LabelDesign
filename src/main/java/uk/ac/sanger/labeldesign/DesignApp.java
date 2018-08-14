@@ -131,6 +131,9 @@ public class DesignApp implements Runnable {
         }
 
         getDesignPanel().addKeyControl(new KeyControl(this));
+
+        frame.addActionButton(actions.get(OperationEnum.ADD_BARCODE));
+        frame.addActionButton(actions.get(OperationEnum.ADD_STRING));
     }
 
     void newDesign() {

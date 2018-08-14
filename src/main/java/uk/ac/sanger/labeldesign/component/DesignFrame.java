@@ -5,6 +5,7 @@ import uk.ac.sanger.labeldesign.model.Design;
 import uk.ac.sanger.labeldesign.view.RenderFactory;
 
 import javax.swing.*;
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -17,15 +18,22 @@ public class DesignFrame extends JFrame {
     private JSplitPane splitPane;
     private JScrollPane designScrollPane;
     private JScrollPane propertiesScrollPane;
+    private JPanel buttonPanel;
 
     public DesignFrame(RenderFactory renderFactory) {
         designPanel = new DesignPanel(renderFactory);
 
         designScrollPane = new JScrollPane(designPanel);
+        designPanel.setRequestFocusEnabled(true);
+        JPanel centrePanel = new JPanel(new BorderLayout());
+
+        buttonPanel = new JPanel();
+        centrePanel.add(designScrollPane, BorderLayout.CENTER);
+        centrePanel.add(buttonPanel, BorderLayout.SOUTH);
 
         propertiesScrollPane = new JScrollPane(new JPanel());
 
-        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, designScrollPane, propertiesScrollPane);
+        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, centrePanel, propertiesScrollPane);
         splitPane.setDividerLocation(550);
         splitPane.setResizeWeight(1);
 
@@ -36,6 +44,13 @@ public class DesignFrame extends JFrame {
                 designPanel.repaint();
             }
         });
+    }
+
+    public JButton addActionButton(Action action) {
+        JButton button = new JButton(action);
+        buttonPanel.add(button);
+        button.setRequestFocusEnabled(false);
+        return button;
     }
 
     public Design getDesign() {
