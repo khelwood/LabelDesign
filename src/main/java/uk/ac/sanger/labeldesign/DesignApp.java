@@ -1,6 +1,7 @@
 package uk.ac.sanger.labeldesign;
 
 import uk.ac.sanger.labeldesign.component.*;
+import uk.ac.sanger.labeldesign.component.DesignAction.Operation;
 import uk.ac.sanger.labeldesign.component.dialog.*;
 import uk.ac.sanger.labeldesign.conversion.*;
 import uk.ac.sanger.labeldesign.model.*;
@@ -49,7 +50,7 @@ public class DesignApp implements Runnable {
         Design design = new Design();
         design.setBounds(0, 0, 500, 300);
         design.setName("New label");
-        frame.setDesign(design);
+        setDesign(design);
         editLabel();
     }
 
@@ -111,6 +112,7 @@ public class DesignApp implements Runnable {
         } else if (editingField!=null && !getDesignSelection().contains(editingField)) {
             closeProperties();
         }
+        enableActions();
     }
 
     public DesignPanel getDesignPanel() {
@@ -119,6 +121,7 @@ public class DesignApp implements Runnable {
 
     public void setDesign(Design design) {
         frame.setDesign(design);
+        enableActions();
     }
 
     private void createActions() {
@@ -239,6 +242,7 @@ public class DesignApp implements Runnable {
         Design design = load(path, jin);
         if (design!=null) {
             setDesign(design);
+            this.filePath = null;
             getDesignPanel().adjustDesignBounds();
             repaintDesign();
             Collection<String> warnings = jin.getWarnings();
@@ -362,6 +366,7 @@ public class DesignApp implements Runnable {
 
     void selectAll() {
         frame.selectAll();
+        boopSelection(true);
     }
 
     public void selectNone() {
@@ -500,4 +505,36 @@ public class DesignApp implements Runnable {
             editingField = null;
         });
     }
+
+    public boolean isOperationEnabled(Operation operation) {
+        if (operation instanceof OperationEnum) {
+            Design design = getDesign();
+            switch ((OperationEnum) operation) {
+                case NEW_DESIGN:
+                case LOAD_DESIGN:
+                case IMPORT_JSON: return true;
+                case SAVE_DESIGN:
+                case SAVE_AS:
+                case EXPORT_JSON:
+                case EDIT_LABEL:
+                case ADD_STRING:
+                case ADD_BARCODE:
+                    return (design!=null);
+                case SELECT_ALL:
+                    return (design!=null && !(design.getStringFields().isEmpty() && design.getBarcodeFields().isEmpty()));
+                case SELECT_NONE:
+                case DELETE_SELECTED:
+                    return (design!=null && !getDesignSelection().isEmpty());
+            }
+        }
+        return true;
+    }
+
+    public void enableActions() {
+        Design design = getDesign();
+        for (DesignAction action : actions.values()) {
+            action.checkEnabled();
+        }
+    }
+
 }

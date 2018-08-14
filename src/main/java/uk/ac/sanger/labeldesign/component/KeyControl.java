@@ -28,7 +28,7 @@ public class KeyControl {
         entries = new ArrayList<>();
         add(OperationEnum.DELETE_SELECTED).key(VK_DELETE).key(VK_BACK_SPACE);
         add(OperationEnum.SAVE_DESIGN).key(VK_S, C_MASK);
-        add(OperationEnum.SAVE_AS).key(VK_S, C_MASK|VK_SHIFT);
+        add(OperationEnum.SAVE_AS).key(VK_S, C_MASK|SHIFT_MASK);
         add(OperationEnum.NEW_DESIGN).key(VK_N, C_MASK);
         add(OperationEnum.LOAD_DESIGN).key(VK_O, C_MASK);
         add(OperationEnum.SELECT_ALL).key(VK_A, C_MASK);

@@ -28,4 +28,7 @@ public class DesignAction extends AbstractAction {
         operation.perform(app);
     }
 
+    public void checkEnabled() {
+        setEnabled(app.isOperationEnabled(this.operation));
+    }
 }
