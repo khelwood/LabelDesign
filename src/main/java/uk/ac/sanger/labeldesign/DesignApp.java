@@ -249,7 +249,7 @@ public class DesignApp implements Runnable {
             getDesignPanel().adjustDesignBounds();
             repaintDesign();
             Collection<String> warnings = jin.getWarnings();
-            String message = "The label bounds are not part of the JSON import.";
+            String message = "The label bounds are set based on the imported contents.";
             if (!warnings.isEmpty()) {
                 message = assembleMessage("The JSON was imported with the following warnings:",
                         warnings, message);

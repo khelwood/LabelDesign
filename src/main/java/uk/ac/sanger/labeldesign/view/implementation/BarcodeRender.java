@@ -1,6 +1,7 @@
 package uk.ac.sanger.labeldesign.view.implementation;
 
 import uk.ac.sanger.labeldesign.model.BarcodeField;
+import uk.ac.sanger.labeldesign.model.Rotation;
 import uk.ac.sanger.labeldesign.view.Draw;
 import uk.ac.sanger.labeldesign.view.Render;
 
@@ -13,8 +14,8 @@ import java.awt.Rectangle;
 public class BarcodeRender implements Render<BarcodeField> {
     @Override
     public Rectangle render(Draw draw, BarcodeField bf) {
-        if (bf.getRotation()!=0) {
-            draw.rotate(bf.getX(), bf.getY(), bf.getRotation()*Math.PI/2);
+        if (bf.getRotation()!=Rotation.NONE) {
+            draw.rotate(bf.getX(), bf.getY(), bf.getRotation().angle());
         }
         Rectangle rect;
         if (bf.is2D()) {
@@ -22,7 +23,7 @@ public class BarcodeRender implements Render<BarcodeField> {
         } else {
             rect = render1D(draw, bf);
         }
-        if (bf.getRotation()!=0) {
+        if (bf.getRotation()!=Rotation.NONE) {
             rect = Draw.rotate(rect, bf.getX(), bf.getY(), bf.getRotation());
         }
         return rect;

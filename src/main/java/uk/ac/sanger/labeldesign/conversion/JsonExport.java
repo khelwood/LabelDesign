@@ -14,7 +14,7 @@ public class JsonExport extends JsonOutput {
                 .add("vertical_magnification", to2s(sf.getVerticalMagnification()))
                 .add("font", String.valueOf(sf.getFontCode()))
                 .add("space_adjustment", to2s(sf.getSpacing()))
-                .add("rotational_angles", rep2(sf.getRotation()))
+                .add("rotational_angles", rep2(sf.getRotation().index()))
                 .add("x_origin", to4s(sf.getX()))
                 .add("y_origin", to4s(sf.getY()))
                 .add("field_name", sf.getName())
@@ -24,7 +24,7 @@ public class JsonExport extends JsonOutput {
     public JsonValue toJson(BarcodeField bf) {
         JsonObjectBuilder builder =  getBuilderFactory().createObjectBuilder()
                 .add("barcode_type", String.valueOf(bf.getTypeCode()))
-                .add("rotational_angle", String.valueOf(bf.getRotation()))
+                .add("rotational_angle", String.valueOf(bf.getRotation().index()))
                 .add("x_origin", to4s(bf.getX()))
                 .add("y_origin", to4s(bf.getY()))
                 .add("field_name", bf.getName());

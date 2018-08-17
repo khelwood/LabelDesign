@@ -1,8 +1,7 @@
 package uk.ac.sanger.labeldesign.component.dialog;
 
-import uk.ac.sanger.labeldesign.model.BarcodeField;
+import uk.ac.sanger.labeldesign.model.*;
 import uk.ac.sanger.labeldesign.model.BarcodeField.Type;
-import uk.ac.sanger.labeldesign.model.Design;
 
 import javax.swing.*;
 import java.awt.BorderLayout;
@@ -22,7 +21,7 @@ public class BarcodeFieldPropertiesPane extends PropertiesPane {
     private JSpinner heightField;
     private JSpinner checkDigitField;
     private JComboBox<Type> typeCodeField;
-    private JComboBox<String> rotationField;
+    private JComboBox<Rotation> rotationField;
     private JLabel headlineLabel;
     private List<Component> componentsFor1D;
     private List<Component> componentsFor2D;
@@ -92,7 +91,7 @@ public class BarcodeFieldPropertiesPane extends PropertiesPane {
             typeCodeField.setSelectedItem(bf.getType());
             xField.setValue(bf.getX());
             yField.setValue(bf.getY());
-            setSelectedRotation(rotationField, bf.getRotation());
+            rotationField.setSelectedItem(bf.getRotation());
             heightField.setValue(bf.getHeight());
             cellWidthField.setValue(bf.getCellWidth());
             moduleWidthField.setValue(bf.getModuleWidth());
@@ -111,7 +110,7 @@ public class BarcodeFieldPropertiesPane extends PropertiesPane {
             bf.setType(barcodeType);
         }
         bf.setPosition((Integer) xField.getValue(), (Integer) yField.getValue());
-        Integer rotation = getRotation(rotationField);
+        Rotation rotation = (Rotation) rotationField.getSelectedItem();
         if (rotation!=null) {
             bf.setRotation(rotation);
         }

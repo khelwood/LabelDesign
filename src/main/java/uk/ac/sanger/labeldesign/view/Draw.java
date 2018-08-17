@@ -1,5 +1,7 @@
 package uk.ac.sanger.labeldesign.view;
 
+import uk.ac.sanger.labeldesign.model.Rotation;
+
 import java.awt.*;
 
 /**
@@ -80,13 +82,12 @@ public class Draw implements AutoCloseable {
     }
 
     @SuppressWarnings("SuspiciousNameCombination")
-    public static Rectangle rotate(Rectangle rect, int x0, int y0, int rotation) {
-        rotation &= 3;
-        if (rotation==0) {
+    public static Rectangle rotate(Rectangle rect, int x0, int y0, Rotation rotation) {
+        if (rotation==Rotation.NONE) {
             return rect;
         }
         Rectangle newRect = new Rectangle();
-        if (rotation==2) {
+        if (rotation==Rotation.INVERT) {
             newRect.width = rect.width;
             newRect.height = rect.height;
             newRect.x = x0 + x0 - rect.x - rect.width;
@@ -94,7 +95,7 @@ public class Draw implements AutoCloseable {
         } else {
             newRect.width = rect.height;
             newRect.height = rect.width;
-            if (rotation==1) {
+            if (rotation==Rotation.RIGHT) {
                 newRect.x = x0 - (rect.y - y0 + rect.height);
                 newRect.y = y0 + (rect.x - x0);
             } else {

@@ -1,7 +1,6 @@
 package uk.ac.sanger.labeldesign.component.dialog;
 
-import uk.ac.sanger.labeldesign.model.Design;
-import uk.ac.sanger.labeldesign.model.StringField;
+import uk.ac.sanger.labeldesign.model.*;
 import uk.ac.sanger.labeldesign.view.RenderFactory;
 
 import javax.swing.*;
@@ -16,7 +15,7 @@ public class StringFieldPropertiesPane extends PropertiesPane {
     private JSpinner xField, yField;
     private JSpinner spacingField;
     private JComboBox<String> fontCodeField;
-    private JComboBox<String> rotationField;
+    private JComboBox<Rotation> rotationField;
     private JSpinner horizontalMagnificationField, verticalMagnificationField;
     private JLabel headlineLabel;
 
@@ -77,7 +76,7 @@ public class StringFieldPropertiesPane extends PropertiesPane {
             spacingField.setValue(sf.getSpacing());
             horizontalMagnificationField.setValue(sf.getHorizontalMagnification());
             verticalMagnificationField.setValue(sf.getVerticalMagnification());
-            setSelectedRotation(rotationField, sf.getRotation());
+            rotationField.setSelectedItem(sf.getRotation());
             setSelectedFont(sf.getFontCode());
         }
     }
@@ -87,7 +86,7 @@ public class StringFieldPropertiesPane extends PropertiesPane {
         sf.setDisplayText(stringField.getText().trim());
         sf.setPosition((Integer) xField.getValue(), (Integer) yField.getValue());
         Character fontCode = getFontCode();
-        Integer rotation = getRotation(rotationField);
+        Rotation rotation = (Rotation) rotationField.getSelectedItem();
         if (fontCode!=null) {
             sf.setFontCode(fontCode);
         }

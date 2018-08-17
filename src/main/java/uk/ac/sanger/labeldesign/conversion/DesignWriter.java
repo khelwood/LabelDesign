@@ -14,7 +14,7 @@ public class DesignWriter extends JsonOutput {
                 .add("text", sf.getDisplayText())
                 .add("font", String.valueOf(sf.getFontCode()))
                 .add("spacing", sf.getSpacing())
-                .add("rotation", sf.getRotation())
+                .add("rotation", sf.getRotation().index())
                 .add("magnification", position(sf.getHorizontalMagnification(), sf.getVerticalMagnification()))
                 .add("position", position(sf))
                 .build();
@@ -24,7 +24,7 @@ public class DesignWriter extends JsonOutput {
         JsonObjectBuilder builder =  getBuilderFactory().createObjectBuilder()
                 .add("name", bf.getName())
                 .add("type", String.valueOf(bf.getTypeCode()))
-                .add("rotation", bf.getRotation())
+                .add("rotation", bf.getRotation().index())
                 .add("position", position(bf));
 
         if (bf.is2D()) {

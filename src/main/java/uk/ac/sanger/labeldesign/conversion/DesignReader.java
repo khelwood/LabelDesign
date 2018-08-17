@@ -23,7 +23,7 @@ public class DesignReader extends JsonInput {
         sf.setDisplayText(stringFrom(jo, "text"));
         sf.setFontCode(charFrom(jo, "font"));
         sf.setSpacing(intFrom(jo, "spacing"));
-        sf.setRotation(intFrom(jo, "rotation"));
+        sf.setRotation(Rotation.fromIndex(intFrom(jo, "rotation")));
         int[] position = pointFrom(jo, "position");
         int[] magnification = pointFrom(jo, "magnification");
         sf.setHorizontalMagnification(magnification[0]);
@@ -47,7 +47,7 @@ public class DesignReader extends JsonInput {
             bf.setModuleWidth(intFrom(jo, "moduleWidth"));
             bf.setCheckDigitType(intFrom(jo, "checkDigitType"));
         }
-        bf.setRotation(intFrom(jo, "rotation"));
+        bf.setRotation(Rotation.fromIndex(intFrom(jo, "rotation")));
         int[] position = pointFrom(jo, "position");
         bf.setPosition(position[0], position[1]);
         return bf;

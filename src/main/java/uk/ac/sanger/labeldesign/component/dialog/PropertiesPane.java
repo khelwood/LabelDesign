@@ -2,6 +2,7 @@ package uk.ac.sanger.labeldesign.component.dialog;
 
 import uk.ac.sanger.labeldesign.component.QuickDocumentListener;
 import uk.ac.sanger.labeldesign.model.DesignField;
+import uk.ac.sanger.labeldesign.model.Rotation;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -9,6 +10,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemListener;
+import java.util.Arrays;
 import java.util.function.Predicate;
 
 /**
@@ -104,19 +106,11 @@ public abstract class PropertiesPane extends JPanel {
         return spinner;
     }
 
-    protected JComboBox<String> makeRotationCombo() {
-        JComboBox<String> combo = new JComboBox<>();
-        combo.addItem("0: Unrotated");
-        combo.addItem("1: Rotated 90° clockwise");
-        combo.addItem("2: Rotated 180°");
-        combo.addItem("3: Rotated 270° clockwise");
+    protected JComboBox<Rotation> makeRotationCombo() {
+        JComboBox<Rotation> combo = new JComboBox<>();
+        Arrays.stream(Rotation.values()).forEach(combo::addItem);
         combo.addItemListener(getFieldItemListener());
         return combo;
-    }
-
-    protected Integer getRotation(JComboBox<String> rotationField) {
-        Character code = getCharacterCode(rotationField);
-        return (code==null ? null : code - '0');
     }
 
     protected static <T> boolean comboSelect(JComboBox<T> combo, Predicate<? super T> predicate) {
@@ -137,10 +131,6 @@ public abstract class PropertiesPane extends JPanel {
             return null;
         }
         return s.charAt(0);
-    }
-
-    protected void setSelectedRotation(JComboBox<String> rotationField, final int rotation) {
-        comboSelect(rotationField, (String s) -> s.charAt(0)==rotation+'0');
     }
 
     protected static boolean allHaveValues(Component... components) {

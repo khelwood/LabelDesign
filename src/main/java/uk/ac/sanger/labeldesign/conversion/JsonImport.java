@@ -85,10 +85,10 @@ public class JsonImport extends JsonInput {
         return sf;
     }
 
-    private int rotationsFrom(JsonObject jo) throws IOException {
+    private Rotation rotationsFrom(JsonObject jo) throws IOException {
         JsonValue jv = jo.get("rotational_angles");
         if (jv==null || jv.getValueType()==JsonValue.ValueType.NULL) {
-            return 0;
+            return Rotation.NONE;
         }
         if (jv.getValueType()==JsonValue.ValueType.NUMBER) {
             int n = ((JsonNumber) jv).intValue();
@@ -99,7 +99,7 @@ public class JsonImport extends JsonInput {
                 throw exception("rotational_angles should be a string, but it is the invalid number "+n);
             }
             warnings.add("rotational_angles should be a string, but it is given as a number: "+jv);
-            return n;
+            return Rotation.fromIndex(n);
         }
         if (!(jv instanceof JsonString)) {
             throw exception("Expected rotational_angles to be a string, but it is "+jv.getValueType());
@@ -116,13 +116,14 @@ public class JsonImport extends JsonInput {
             throw exception("This application currently only supports rotational_angles where the character rotation "+
                     "matches the string rotation. E.g. \"00\", \"11\". Found: \""+value+"\".");
         }
-        return r;
+        return Rotation.fromIndex(r);
     }
 
-    private int rotationFrom(JsonObject jo, boolean twod) throws IOException {
+    private Rotation rotationFrom(JsonObject jo, boolean twod) throws IOException {
         JsonValue jv = jo.get("rotational_angle");
         if (jv==null || jv.getValueType()==JsonValue.ValueType.NULL) {
-            return twod ? 1 : 0;
+            // PMB defaults to rotation 1 for 2D barcodes
+            return twod ? Rotation.RIGHT : Rotation.NONE;
         }
         if (jv.getValueType()==JsonValue.ValueType.NUMBER) {
             int n = ((JsonNumber) jv).intValue();
@@ -130,7 +131,7 @@ public class JsonImport extends JsonInput {
                 throw exception("rotational_angle should be a string, but it is the invalid number "+n);
             }
             warnings.add("rotational_angle should be a string, but it is given as a number: "+jv);
-            return n;
+            return Rotation.fromIndex(n);
         }
         if (!(jv instanceof JsonString)) {
             throw exception("Expected rotational_angle to be a string, but it is "+jv.getValueType());
@@ -143,7 +144,7 @@ public class JsonImport extends JsonInput {
         if (r<0 || r>=4) {
             throw exception("Expected rotational_angle to be in the range \"0\" to \"3\", but found \""+value+"\".");
         }
-        return r;
+        return Rotation.fromIndex(r);
     }
 
     private int getMagnification(JsonObject jo, String key) throws IOException {
