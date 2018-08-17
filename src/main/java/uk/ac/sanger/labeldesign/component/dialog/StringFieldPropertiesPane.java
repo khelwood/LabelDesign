@@ -1,6 +1,7 @@
 package uk.ac.sanger.labeldesign.component.dialog;
 
-import uk.ac.sanger.labeldesign.model.*;
+import uk.ac.sanger.labeldesign.model.Design;
+import uk.ac.sanger.labeldesign.model.StringField;
 import uk.ac.sanger.labeldesign.view.RenderFactory;
 
 import javax.swing.*;
@@ -114,13 +115,8 @@ public class StringFieldPropertiesPane extends PropertiesPane {
     }
 
     @Override
-    public void dragged(DesignField field) {
-        if (field instanceof StringField) {
-            boolean listening = isChangeListening();
-            setChangeListening(false);
-            xField.setValue(field.getX());
-            yField.setValue(field.getY());
-            setChangeListening(listening);
-        }
+    protected void setXY(int x, int y) {
+        xField.setValue(x);
+        yField.setValue(y);
     }
 }

@@ -15,15 +15,13 @@ import java.awt.event.ComponentEvent;
  */
 public class DesignFrame extends JFrame {
     private DesignPanel designPanel;
-    private JSplitPane splitPane;
-    private JScrollPane designScrollPane;
     private JScrollPane propertiesScrollPane;
     private JPanel buttonPanel;
 
     public DesignFrame(RenderFactory renderFactory) {
         designPanel = new DesignPanel(renderFactory);
 
-        designScrollPane = new JScrollPane(designPanel);
+        JScrollPane designScrollPane = new JScrollPane(designPanel);
         designPanel.setRequestFocusEnabled(true);
         JPanel centrePanel = new JPanel(new BorderLayout());
 
@@ -33,7 +31,7 @@ public class DesignFrame extends JFrame {
 
         propertiesScrollPane = new JScrollPane(new JPanel());
 
-        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, centrePanel, propertiesScrollPane);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, centrePanel, propertiesScrollPane);
         splitPane.setDividerLocation(550);
         splitPane.setResizeWeight(1);
 
@@ -78,10 +76,6 @@ public class DesignFrame extends JFrame {
 
     public void selectAll() {
         designPanel.selectAll();
-    }
-
-    public void deselect() {
-        designPanel.deselect();
     }
 
     public void repaintDesign() {

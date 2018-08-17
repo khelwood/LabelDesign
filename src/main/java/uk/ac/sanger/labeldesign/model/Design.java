@@ -29,32 +29,16 @@ public class Design {
         return this.xMin;
     }
 
-    public void setXMin(int xMin) {
-        this.xMin = xMin;
-    }
-
     public int getXMax() {
         return this.xMax;
-    }
-
-    public void setXMax(int xMax) {
-        this.xMax = xMax;
     }
 
     public int getYMin() {
         return this.yMin;
     }
 
-    public void setYMin(int yMin) {
-        this.yMin = yMin;
-    }
-
     public int getYMax() {
         return this.yMax;
-    }
-
-    public void setYMax(int yMax) {
-        this.yMax = yMax;
     }
 
     public void setBounds(int xMin, int yMin, int xMax, int yMax) {

@@ -70,8 +70,8 @@ public class DesignPanel extends JPanel {
                 } else {
                     Rectangle bounds = boundsUnion(fieldBounds.values());
                     int margin = 20;
-                    design.setBounds(bounds.x- margin, bounds.y- margin,
-                            bounds.x+bounds.width+ margin, bounds.y + bounds.height+ margin);
+                    design.setBounds(bounds.x - margin, bounds.y - margin,
+                            bounds.x + bounds.width + margin, bounds.y + bounds.height + margin);
                 }
                 repaint();
             }
@@ -80,19 +80,18 @@ public class DesignPanel extends JPanel {
     }
 
     private static Rectangle boundsUnion(Collection<? extends Rectangle> rects) {
-        int x0 = 0, y0 = 0, x1 = -1, y1 = -1;
-        for (Rectangle rect : rects) {
-            if (x1<x0) {
-                x0 = rect.x;
-                y0 = rect.y;
-                x1 = x0 + rect.width;
-                y1 = y0 + rect.height;
-            } else {
-                x0 = Math.min(x0, rect.x);
-                y0 = Math.min(y0, rect.y);
-                x1 = Math.max(x1, rect.x + rect.width);
-                y1 = Math.max(y1, rect.y + rect.height);
-            }
+        Iterator<? extends Rectangle> iter = rects.iterator();
+        Rectangle rect = iter.next();
+        int x0 = rect.x;
+        int y0 = rect.y;
+        int x1 = x0 + rect.width;
+        int y1 = y0 + rect.height;
+        while (iter.hasNext()) {
+            rect = iter.next();
+            x0 = Math.min(x0, rect.x);
+            y0 = Math.min(y0, rect.y);
+            x1 = Math.max(x1, rect.x + rect.width);
+            y1 = Math.max(y1, rect.y + rect.height);
         }
         return new Rectangle(x0, y0, x1-x0, y1-y0);
     }
@@ -122,11 +121,6 @@ public class DesignPanel extends JPanel {
         repaint();
     }
 
-    public void clearSelectionRect() {
-        selection.finishRect();
-        repaint();
-    }
-
     public void setDesign(Design design) {
         this.design = design;
         repaint();
@@ -141,7 +135,9 @@ public class DesignPanel extends JPanel {
     }
 
     private static int area(Rectangle rect) {
-        return rect.width*rect.width + rect.height*rect.height;
+        int w = rect.width;
+        int h = rect.height;
+        return (w*w + h*h);
     }
 
     private static boolean intersects(Rectangle a, Rectangle b) {
@@ -152,25 +148,18 @@ public class DesignPanel extends JPanel {
     public DesignField getFieldAt(int x, int y) {
         x -= x0;
         y -= y0;
+        int bestArea = 0;
         Map.Entry<DesignField, Rectangle> best = null;
         for (Map.Entry<DesignField, Rectangle> entry : fieldBounds.entrySet()) {
             if (entry.getValue().contains(x,y)) {
-                if (best==null || area(entry.getValue()) < area(best.getValue())) {
+                int area = area(entry.getValue());
+                if (best==null || area < bestArea) {
                     best = entry;
+                    bestArea = area;
                 }
             }
         }
         return (best==null ? null : best.getKey());
-    }
-
-    public void deselect() {
-        selection.clear();
-        repaint();
-    }
-
-    public void select(DesignField df) {
-        selection.add(df);
-        repaint();
     }
 
     public void selectAll() {
@@ -181,14 +170,6 @@ public class DesignPanel extends JPanel {
         selection.addAll(design.getStringFields());
         selection.addAll(design.getBarcodeFields());
         repaint();
-    }
-
-    public boolean toggleSelection(DesignField df) {
-        return selection.toggle(df);
-    }
-
-    public boolean isSelected(DesignField df) {
-        return selection.contains(df);
     }
 
     public boolean drag(int dx, int dy) {

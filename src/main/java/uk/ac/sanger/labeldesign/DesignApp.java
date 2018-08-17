@@ -534,7 +534,6 @@ public class DesignApp implements Runnable {
     }
 
     public void enableActions() {
-        Design design = getDesign();
         for (DesignAction action : actions.values()) {
             action.checkEnabled();
         }

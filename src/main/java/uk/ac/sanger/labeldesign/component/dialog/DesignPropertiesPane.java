@@ -87,4 +87,9 @@ public class DesignPropertiesPane extends PropertiesPane {
         design.setBounds(x0, y0, x1, y1);
         design.setLabelTypeId(labelType);
     }
+
+    @Override
+    protected void setXY(int x, int y) {
+        throw new UnsupportedOperationException();
+    }
 }

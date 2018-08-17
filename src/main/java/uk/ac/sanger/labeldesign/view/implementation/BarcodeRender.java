@@ -27,6 +27,7 @@ public class BarcodeRender implements Render<BarcodeField> {
         }
         return rect;
     }
+
     private Rectangle render2D(Draw draw, BarcodeField bf) {
         int size = 20 * bf.getCellWidth(); // approximate
         Rectangle rect = new Rectangle(bf.getX(), bf.getY(), size, size);
@@ -40,6 +41,7 @@ public class BarcodeRender implements Render<BarcodeField> {
         }
         return rect;
     }
+
     private Rectangle render1D(Draw draw, BarcodeField bf) {
         int moduleWidth = bf.getModuleWidth()*10;
         int width = moduleWidth*12;

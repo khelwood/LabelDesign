@@ -71,9 +71,9 @@ public class Draw implements AutoCloseable {
         g2.dispose();
     }
 
-    public Draw create() {
-        return new Draw(this.graphics);
-    }
+//    public Draw create() {
+//        return new Draw(this.graphics);
+//    }
 
     public void rotate(int x, int y, double angle) {
         ((Graphics2D) graphics).rotate(angle, x, y);

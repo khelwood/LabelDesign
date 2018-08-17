@@ -30,12 +30,6 @@ public abstract class JsonInput {
 
     public abstract Design toDesign(JsonValue jsonValue) throws IOException;
 
-    public Design readDesign(Path path) throws IOException {
-        JsonValue jsonValue = readPath(path);
-        return toDesign(jsonValue);
-    }
-
-
     protected JsonValue valueFrom(JsonObject jo, String key) throws IOException {
         JsonValue value = jo.get(key);
         if (value==null) {

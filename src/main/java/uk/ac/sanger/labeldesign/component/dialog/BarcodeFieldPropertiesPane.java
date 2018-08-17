@@ -1,7 +1,8 @@
 package uk.ac.sanger.labeldesign.component.dialog;
 
-import uk.ac.sanger.labeldesign.model.*;
+import uk.ac.sanger.labeldesign.model.BarcodeField;
 import uk.ac.sanger.labeldesign.model.BarcodeField.Type;
+import uk.ac.sanger.labeldesign.model.Design;
 
 import javax.swing.*;
 import java.awt.BorderLayout;
@@ -148,13 +149,8 @@ public class BarcodeFieldPropertiesPane extends PropertiesPane {
     }
 
     @Override
-    public void dragged(DesignField field) {
-        if (field instanceof BarcodeField) {
-            boolean listening = isChangeListening();
-            setChangeListening(false);
-            xField.setValue(field.getX());
-            yField.setValue(field.getY());
-            setChangeListening(listening);
-        }
+    protected void setXY(int x, int y) {
+        xField.setValue(x);
+        yField.setValue(y);
     }
 }

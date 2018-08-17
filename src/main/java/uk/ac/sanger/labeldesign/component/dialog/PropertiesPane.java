@@ -52,8 +52,8 @@ public abstract class PropertiesPane extends JPanel {
     }
 
     protected DocumentListener getFieldDocListener() {
-        if (fieldDocListener ==null) {
-            fieldDocListener = (QuickDocumentListener) this::updateState;
+        if (fieldDocListener==null) {
+            fieldDocListener = QuickDocumentListener.of(this::updateState);
         }
         return fieldDocListener;
     }
@@ -200,8 +200,13 @@ public abstract class PropertiesPane extends JPanel {
         this.closeAction = closeAction;
     }
 
+    protected abstract void setXY(int x, int y);
+
     public void dragged(DesignField field) {
-        // do nothing
+        boolean listening = isChangeListening();
+        setChangeListening(false);
+        setXY(field.getX(), field.getY());
+        setChangeListening(listening);
     }
 
 }
