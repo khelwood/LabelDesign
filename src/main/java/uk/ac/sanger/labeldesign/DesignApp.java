@@ -340,8 +340,8 @@ public class DesignApp implements Runnable {
     private Path requestFilePath(Path path, int mode, String extension) {
         FileDialog fd = new FileDialog(frame, mode==FileDialog.SAVE ? "Save design" : "Load design", mode);
         if (path!=null) {
-            fd.setDirectory(filePath.getParent().toAbsolutePath().toString());
-            fd.setFile(filePath.getFileName().toString());
+            fd.setDirectory(path.getParent().toAbsolutePath().toString());
+            fd.setFile(path.getFileName().toString());
         } else {
             fd.setFile("Label"+extension);
         }
