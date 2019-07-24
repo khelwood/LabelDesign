@@ -7,7 +7,7 @@ import java.util.Objects;
  */
 public class BarcodeField extends DesignField {
     public enum Type {
-        DATAMATRIX("Q: Data matrix", true), EAN13("5: EAN13", false);
+        DATAMATRIX("Q: Data matrix", true), EAN13("5: EAN13", false), CODE128("9: CODE128", false);
 
         private final String desc;
         private final boolean twod;
@@ -37,6 +37,7 @@ public class BarcodeField extends DesignField {
         public static Type fromCode(char ch) {
             switch (ch) {
                 case '5': return EAN13;
+                case '9': return CODE128;
                 case 'Q': return DATAMATRIX;
                 default: throw new IllegalArgumentException("Invalid type code: "+ch);
             }

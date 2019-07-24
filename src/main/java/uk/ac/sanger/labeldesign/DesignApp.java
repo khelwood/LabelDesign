@@ -11,7 +11,7 @@ import uk.ac.sanger.labeldesign.view.implementation.RenderFactoryImp;
 import javax.json.JsonValue;
 import javax.swing.*;
 import java.awt.FileDialog;
-import java.io.FilenameFilter;
+import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
@@ -314,6 +314,36 @@ public class DesignApp implements Runnable {
         JsonExport jx = new JsonExport();
         JsonValue designJson = jx.toJson(design);
         write(designJson, path, jx);
+    }
+
+    void exportCab() {
+        Design design = getDesign();
+        if (design==null) {
+            return;
+        }
+        Path path = requestFilePath(null, FileDialog.SAVE, ".txt");
+        if (path==null) {
+            return;
+        }
+        Map<String, String> fieldValues = new HashMap<>();
+        for (BarcodeField bf : design.getBarcodeFields()) {
+            String value;
+            if (bf.getType()== BarcodeField.Type.EAN13) {
+                value = "200000000000"; // omit check digit
+            } else {
+                value = "CGAP-ABC123";
+            }
+            fieldValues.put(bf.getName(), value);
+        }
+        for (StringField sf : design.getStringFields()) {
+            fieldValues.put(sf.getName(), sf.getDisplayText());
+        }
+        try (CabGenerator cg = new CabGenerator(new PrintWriter(Files.newOutputStream(path)))) {
+            cg.write(design, fieldValues);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showError("File error", "An error occurred trying to write the file.", e);
+        }
     }
 
     private void saveDesign(Path path) {

@@ -15,6 +15,7 @@ public enum OperationEnum implements DesignAction.Operation {
     SAVE_AS(MenuGroup.File, "Save design as", DesignApp::saveDesignAs, 1),
     IMPORT_JSON(MenuGroup.File, "Import JSON", DesignApp::importJson, 2),
     EXPORT_JSON(MenuGroup.File, "Export JSON", DesignApp::exportJson, 2),
+    EXPORT_CAB(MenuGroup.File, "Export CAB", DesignApp::exportCab, 3),
 
     SELECT_ALL(MenuGroup.Edit, "Select all", DesignApp::selectAll),
     SELECT_NONE(MenuGroup.Edit, "Select none", DesignApp::selectNone),

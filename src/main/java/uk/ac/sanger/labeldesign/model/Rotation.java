@@ -7,9 +7,9 @@ package uk.ac.sanger.labeldesign.model;
  */
 public enum Rotation {
     NONE("Unrotated"),
-    RIGHT("Rotated 90° clockwise"),
+    RIGHT("Rotated 90° anticlockwise"),
     INVERT("Rotated 180°"),
-    LEFT("Rotated 270° clockwise"),;
+    LEFT("Rotated 270° anticlockwise"),;
 
     private final String desc;
 
@@ -31,11 +31,18 @@ public enum Rotation {
     }
 
     /**
-     * The angle of this rotation, clockwise in radians.
+     * The angle of this rotation, anticlockwise in radians.
      * @return the {@link #index} of this rotation multiplied by <code>&pi;/2</code>.
      */
     public double angle() {
         return this.index() * Math.PI / 2;
+    }
+
+    /**
+     * The angle of this rotation, clockwise in degrees. Note this is in the opposite direction to {@link #angle}.
+     */
+    public int degrees() {
+        return (360 - 90*this.index()) % 360;
     }
 
     /**

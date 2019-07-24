@@ -21,6 +21,65 @@ public class FontFactory {
         }
         return new Font(font.getFontName(), style, scaledSize);
     }
+    
+    public static String nominalFontName(char fontCode) {
+        switch (fontCode) {
+            case 'A': return "Times Roman medium";
+            case 'B': return "Times Roman medium";
+            case 'C': return "Times Roman bold";
+            case 'D': return "Times Roman bold";
+            case 'E': return "Times Roman bold";
+            case 'F': return "Times Roman italic";
+            case 'G': return "Helvetica medium";
+            case 'H': return "Helvetica medium";
+            case 'I': return "Helvetica medium";
+            case 'J': return "Helvetica bold";
+            case 'K': return "Helvetica bold";
+            case 'L': return "Helvetica italic";
+            case 'M': return "Presentation bold";
+            case 'N': return "Letter Gothic medium";
+            case 'O': return "Prestige Elite medium";
+            case 'P': return "Prestige Elite bold";
+            case 'Q': return "Courier medium";
+            case 'R': return "Courier bold";
+            case 'S': return "OCR-A";
+            case 'T': return "OCR-B";
+            case 'q': return "Gothic 725 Black";
+
+            default: throw new IllegalArgumentException("Unknown font code: "+fontCode);
+        }
+    }
+
+    public static float nominalFontSize(char fontCode) {
+        switch (fontCode) {
+            case 'A': return 12;
+            case 'B': return 15;
+            case 'C': return 15;
+            case 'D': return 18;
+            case 'E': return 21;
+            case 'F': return 18;
+            case 'G': return 9;
+            case 'H': return 15;
+            case 'I': return 18;
+            case 'J': return 18;
+            case 'K': return 21;
+            case 'L': return 18;
+            case 'M': return 27;
+            case 'N': return 14.3f;
+            case 'O': return 10.5f;
+            case 'P': return 15;
+            case 'Q': return 15;
+            case 'R': return 18;
+            case 'S': return 12;
+            case 'T': return 12;
+            case 'q': return 6;
+            default: throw new IllegalArgumentException("Unknown font code: "+fontCode);
+        }
+    }
+
+    public static boolean mono(char fontCode) {
+        return (fontCode>='O' && fontCode<='T');
+    }
 
     private Font bestFont(String family, int style, int size) {
         String[] alternatives = null;

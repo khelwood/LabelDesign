@@ -35,58 +35,53 @@ public class RenderFactoryImp implements RenderFactory {
     }
 
     private Font newFont(char fontCode) {
-        switch (fontCode) {
-            case 'A': return fontFactory.getFont("Times Roman", Font.PLAIN, 12);
-            case 'B': return fontFactory.getFont("Times Roman", Font.PLAIN, 15);
-            case 'C': return fontFactory.getFont("Times Roman", Font.BOLD, 15);
-            case 'D': return fontFactory.getFont("Times Roman", Font.BOLD, 18);
-            case 'E': return fontFactory.getFont("Times Roman", Font.BOLD, 21);
-            case 'F': return fontFactory.getFont("Times Roman", Font.ITALIC, 18);
-            case 'G': return fontFactory.getFont("Helvetica", Font.PLAIN, 9);
-            case 'H': return fontFactory.getFont("Helvetica", Font.PLAIN, 15);
-            case 'I': return fontFactory.getFont("Helvetica", Font.PLAIN, 18);
-            case 'J': return fontFactory.getFont("Helvetica", Font.BOLD, 18);
-            case 'K': return fontFactory.getFont("Helvetica", Font.BOLD, 21);
-            case 'L': return fontFactory.getFont("Helvetica", Font.ITALIC, 18);
-            case 'M': return fontFactory.getFont("Presentation", Font.BOLD, 27);
-            case 'N': return fontFactory.getFont("Letter gothic", Font.PLAIN, 14.3f);
-            case 'O': return fontFactory.getFont("Prestige Elite", Font.PLAIN, 10.5f);
-            case 'P': return fontFactory.getFont("Prestige Elite", Font.BOLD, 15);
-            case 'Q': return fontFactory.getFont("Courier", Font.PLAIN, 15);
-            case 'R': return fontFactory.getFont("Courier", Font.BOLD, 18);
-            case 'S': return fontFactory.getFont("OCR-A", Font.PLAIN, 12);
-            case 'T': return fontFactory.getFont("OCR-B", Font.PLAIN, 12);
-            case 'q': return fontFactory.getFont("Gothic 725", Font.PLAIN, 6);
+        String family = substituteFamily(fontCode);
+        int style = style(fontCode);
+        float size = FontFactory.nominalFontSize(fontCode);
+        return fontFactory.getFont(family, style, size);
+    }
 
+    private String substituteFamily(char fontCode) {
+        if (fontCode >= 'A' && fontCode <= 'F') {
+            return "Times Roman";
+        }
+        if (fontCode >= 'G' && fontCode <= 'L') {
+            return "Helvetica";
+        }
+        if (fontCode >= 'O' && fontCode <= 'P') {
+            return "Prestige Elite";
+        }
+        if (fontCode >= 'Q' && fontCode <= 'R') {
+            return "Courier";
+        }
+        switch (fontCode) {
+            case 'M': return "Presentation";
+            case 'N': return "Letter gothic";
+            case 'S': return "OCR-A";
+            case 'T': return "OCR-B";
+            case 'q': return "Gothic 725";
             default: throw new IllegalArgumentException("Unknown font code: "+fontCode);
         }
     }
 
-    private String fontDesc(char fontCode) {
+    private int style(char fontCode) {
         switch (fontCode) {
-            case 'A': return "Times Roman medium: 12point";
-            case 'B': return "Times Roman medium: 15point";
-            case 'C': return "Times Roman bold: 15point";
-            case 'D': return "Times Roman bold: 18point";
-            case 'E': return "Times Roman bold: 21point";
-            case 'F': return "Times Roman italic: 18point";
-            case 'G': return "Helvetica medium: 9point";
-            case 'H': return "Helvetica medium: 15point";
-            case 'I': return "Helvetica medium: 18point";
-            case 'J': return "Helvetica bold: 18point";
-            case 'K': return "Helvetica bold: 21point";
-            case 'L': return "Helvetica italic: 18point";
-            case 'M': return "Presentation bold: 27point";
-            case 'N': return "Letter Gothic medium: 14.3point";
-            case 'O': return "Prestige Elite medium: 10.5point";
-            case 'P': return "Prestige Elite bold: 15point";
-            case 'Q': return "Courier medium: 15point";
-            case 'R': return "Courier bold: 18point";
-            case 'S': return "OCR-A: 12point";
-            case 'T': return "OCR-B: 12point";
-            case 'q': return "Gothic 725 Black: 6point";
+            case 'C': case 'D': case 'E': case 'J': case 'K': case 'M': case 'P': case 'R':
+                return Font.BOLD;
+            case 'F': case 'L':
+                return Font.ITALIC;
+            default:
+                return Font.PLAIN;
+        }
+    }
 
-            default: throw new IllegalArgumentException("Unknown font code: "+fontCode);
+    private String fontDesc(char fontCode) {
+        float fontSize = FontFactory.nominalFontSize(fontCode);
+        String name = FontFactory.nominalFontName(fontCode);
+        if ((int) fontSize==fontSize) {
+            return String.format("%s: %dpoint", name, (int) fontSize);
+        } else {
+            return String.format("%s: %.1fpoint", name, fontSize);
         }
     }
 
